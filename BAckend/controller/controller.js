@@ -1,4 +1,5 @@
 import { User } from "../model/usermodel.js"
+import bcrypt from "bcryptjs";
 export const register = async (req, res) => {
 
     try {
@@ -16,8 +17,17 @@ export const register = async (req, res) => {
 
         }
 
+
+        const hashedPassword = await bcrypt.hash(password , 5)
+        // now need to add hasjed password 
+
+        const maleProfilePhoto = "https://avatar.iran.liara.run/public/boy?userName=${userName}"
+        const femaleProfilePhoto = "https://avatar.iran.liara.run/public/girl?userName=${userName}"
+        // const profilePhoto = gender === "male" ? maleProfilePhoto : femaleProfilePhoto;
+
+
         await User.create({
-            fullName, userName, password, profilePhoto , gender
+            fullName, userName, password: hashedPassword, profilePhoto : gender === "male" ? maleProfilePhoto : femaleProfilePhoto, gender 
         })
 
 
