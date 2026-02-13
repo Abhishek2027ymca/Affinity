@@ -11,5 +11,11 @@ const conversationModel = new mongoose.Schema({
     messages:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Message"
-    }]
-})
+     }]
+} 
+, { timestamps : true })
+
+
+// we have used timestamps to get the createdAt and updatedAt fields in the conversation model
+
+// messages is an array 

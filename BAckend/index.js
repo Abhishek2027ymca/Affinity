@@ -9,6 +9,11 @@ dotenv.config({});// first it will be configured
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+// creating login logic 
+app.post("/login" , (req ,  res)=>{})
+
+app.post("/register")
+
 
 app.listen(PORT , ()=>{
    connectdb();
