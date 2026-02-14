@@ -92,4 +92,20 @@ export const login = async (req,res)=>{
         console.log(error );
         
     }
-}
+}// we will get a token value ere for further sesssion
+
+
+
+// ____________logiout controller  ______________
+// never forgot try catch logic 
+
+export const logout = (req, res) => {  // Add req here
+    try {
+        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+            message: "logged out successfully"
+        })
+    }
+    catch(error) {
+        console.log(error);
+    }
+}   // here token will be removed fromt he body 
