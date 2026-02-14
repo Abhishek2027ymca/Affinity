@@ -1,17 +1,18 @@
-import { User } from "../model/usermodel.js"
-import bcrypt from "bcryptjs";
+import User from "../model/usermodel.js"  // Remove the curly braces
+import bcrypt from "bcryptjs"; // is this coorect 
+// 
 export const register = async (req, res) => {
 
     try {
-        const { fullName, userName, password, confirmaPassword, gender } = req.body;
-        if (!fullName || !userName || !password || !confirmaPassword || !gender) {
+        const { fullName, username , password, confirmaPassword, gender } = req.body;
+        if (!fullName || !username || !password || !confirmaPassword || !gender) {
             return res.status(400).json({ message: "All fileds are required " });
         }
         if (password !== confirmaPassword) {
             return res.status(400).json({ message: "password and confirma password should be same " })
         }
 
-        const user = await User.findOne({ userName });
+        const user = await User.findOne({ username });
         if (user) {
             return res.status(400).json({ message: " user already exist try diffrent username" });
 
@@ -27,7 +28,7 @@ export const register = async (req, res) => {
 
 
         await User.create({
-            fullName, userName, password: hashedPassword, profilePhoto : gender === "male" ? maleProfilePhoto : femaleProfilePhoto, gender 
+            fullName, username, password: hashedPassword, profilePhoto : gender === "male" ? maleProfilePhoto : femaleProfilePhoto, gender 
         })
 
      
