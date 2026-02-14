@@ -11,7 +11,8 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-app.use("/api/v1/user" , userRoute)
+app.use(express.json()) // body parser midlware 
+app.use("/api/v1/user" , userRoute) ;// execurted on localhost:8080/api/v1/user
 
 app.listen(PORT , ()=>{
    connectdb();
