@@ -37,7 +37,7 @@ export const sendMessage = async (req, res)=>{
         await gotConversation.save(); //  this saves the conversation with the new message added to the messages array.
 
     }
-// statrt implemting SOCKET IO
+// !!!!          statrt implemting SOCKET IO
     catch(error){
 console.log(error );
 
