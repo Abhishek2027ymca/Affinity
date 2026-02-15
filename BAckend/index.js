@@ -1,27 +1,23 @@
-
-import express  from "express" ;
+import express from "express";
 import dotenv from "dotenv";
 import connectdb from "./config/db.js";
-import userRoute from  "./Routes/userRoute.js"
-import { connect } from "mongoose";
+import userRoute from "./Routes/userRoute.js";
+import messageRoute from "./Routes/messageRoute.js";
 import cookieParser from "cookie-parser";
 
-
-dotenv.config({});// first it will be configured
+dotenv.config({});
 
 const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-// ✅ ADD THESE MIDDLEWARE IN THIS ORDER:
-app.use(express.json());  // Parse JSON body - CRITICAL!
-// app.use(express.urlencoded({ extended: true }));  // Parse URL-encoded data
-app.use(cookieParser());  // Parse cookies
+app.use(express.json());
+app.use(cookieParser());
 
-app.use("/api/v1/user" , userRoute) ;// execurted on localhost:8080/api/v1/user
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/message", messageRoute);
 
-app.listen(PORT , ()=>{
-   connectdb();
-   console.log(`server is listening to your port ${PORT}` );
-   
-})
+app.listen(PORT, () => {
+    connectdb();
+    console.log(`server is listening to your port ${PORT}`);
+});

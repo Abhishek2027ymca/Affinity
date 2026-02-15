@@ -19,3 +19,4 @@ const conversationModel = new mongoose.Schema({
 // we have used timestamps to get the createdAt and updatedAt fields in the conversation model
 
 // messages is an array 
+export const conversation = mongoose.model("conversationModel" , conversationModel)

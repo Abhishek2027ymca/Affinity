@@ -75,7 +75,8 @@ export const login = async (req,res)=>{
  
         // toekndata is an  object arrya 
         const tokenData = {
-            userId:user._id
+            userId:user._id  // this will be used in authetication part 
+            // for  conatian as a pay;load in token decryotpion
         }
 
         const token = await jwt.sign(tokenData , process.env. JWT_SECRET_KEY , {expiresIn : '1d'});
@@ -109,6 +110,8 @@ export const logout = (req, res) => {  // Add req here
         console.log(error);
     }
 }   // here token will be removed fromt he body 
+
+
 
 
 //_______________gettig the no. of  other user _____________________
