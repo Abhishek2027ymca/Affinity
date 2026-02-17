@@ -46,15 +46,18 @@ export const sendMessage = async (req, res) => {
 // !!!!          statrt implemting SOCKET IO
 
 export const getMessage = async (req, res) => {
-    try {
-        const receiverId = req.params.id;  // ✅ FIXED , take recier id an dthen    , i am the reciever                 
-        const senderId = req.id;  // i ma hte sender 
+    try {  // i will take reciever in params , snderidfrom id 
+        const receiverId = req.params.id.trim();  // ✅ FIXED , take recier id an dthen    , i am the reciever                 
+        const senderId = req.id.trim();  // i ma hte sender  . stored in req.id
 
-        const gotConversation = await conversation.findOne({
-            participants: { $all: [senderId, receiverId] }  // ✅ FIXED
-        }).populate("messages");
-
-        return res.status(200).json(gotConversation?.messages);
+             const gotConversation = await conversation.findOne({  // ✅ FIXED - renamed to gotConversation
+            participants: { $all: [senderId, receiverId] }
+        }).populate("messages");// .populte will treturn all the messages in the conversation
+        // got conversation will have the conversation document with the messages array populated with the actual message documents instead of just their IDs.
+         // for t his end point we need reciever reciever id . ?
+         console.log(senderId, receiverId); // ✅ ADDED - for debugging
+       console.log(gotConversation); //prinyting the conversation
+       // http://localhost:8080/api/v1/message/6991e7f92fa7e417b5916de6    _________ this is recievers id                                                                                           
 
     } catch (error) {
         console.log(error);
