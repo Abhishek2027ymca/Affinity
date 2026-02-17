@@ -55,9 +55,13 @@ export const getMessage = async (req, res) => {
         }).populate("messages");// .populte will treturn all the messages in the conversation
         // got conversation will have the conversation document with the messages array populated with the actual message documents instead of just their IDs.
          // for t his end point we need reciever reciever id . ?
-         console.log(senderId, receiverId); // ✅ ADDED - for debugging
-       console.log(gotConversation); //prinyting the conversation
+    //      console.log(senderId, receiverId); // ✅ ADDED - for debugging
+    //    console.log(gotConversation); //prinyting the conversation
        // http://localhost:8080/api/v1/message/6991e7f92fa7e417b5916de6    _________ this is recievers id                                                                                           
+
+return res.status(200).json(
+     gotConversation?.messages || [] // ✅ FIXED - added optional chaining and default to empty array
+)
 
     } catch (error) {
         console.log(error);
