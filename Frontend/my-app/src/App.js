@@ -3,7 +3,10 @@ import './App.css';
 function App() {
   return (
     <div>
-      lets build chat app 
+      <button className="btn"> lets build chat app 
+</button>
+<button className="btn btn-sm">Small</button>
+
     </div>
   );
 }
