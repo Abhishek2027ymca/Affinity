@@ -1,10 +1,36 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'; 
+import HomePage from './components/HomePage';
+import Signup from './components/Signup';
+import Login from './components/Login';
 
+
+// creatinf fromnmtend router 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element:<HomePage/>
+
+  },
+  {
+    path: "/register",
+    element:<Signup/>
+
+  },
+  {
+    path: "/login",
+    element:<Login/>
+
+  }
+
+
+])
 function App() {
   return (
-    <div className="App">
-           <button className="btn btn-secondary">Secondary</button>
+    <div className=" p-4 h-screen flex items-center justify-center">
+
+<RouterProvider router = {router}/>
 
     </div>
   );
