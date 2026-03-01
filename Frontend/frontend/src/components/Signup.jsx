@@ -1,7 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react"; // need to istall reactdom and react-router-dom fro these 
 
 const Signup = () => {
+
+
+    // taking input from user and storing in state
+ const [user, setUser] = useState({
+    fullName : "",
+    username : "" ,
+    password : "",
+    confirmpassword : "",
+    gender : "" ,
+ })
+
+ const onSubmitHandler = (e) => {
+    e.preventDefault();
+    console.log(user);
+
+ }
+
+
   return (
     <div className="min-w-96  mx-auto">
       <div
@@ -13,12 +32,14 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
           {" "}
           Signup Page{" "}
         </h1>
-        <form action="">
+        <form   onSubmit =  {onSubmitHandler} action="">
           <div>
             <label className="label p-2">
               <span className="text-base label-text"> Full Name</span>
             </label>
             <input
+            value ={user.fullname}
+            onChange = {(e) => setUser({...user, fullname : e.target.value})}
               className="w-full  input-bordered h-10"
               type="text"
               placeholder=" Your Name"
@@ -30,6 +51,8 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <span className="text-base label-text"> UserName</span>
             </label>
             <input
+              value ={user.username}
+              onChange = {(e) => setUser({...user, username : e.target.value})}
               className="w-full  input-bordered h-10"
               type="text"
               placeholder=" UserName"
@@ -43,6 +66,8 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <span className="text-base label-text"> Password </span>
             </label>
             <input
+              value ={user.password}
+              onChange = {(e) => setUser({...user, password : e.target.value})}
               className="w-full  input-bordered h-10"
               type="password"
               placeholder=" Password"
@@ -55,6 +80,8 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <span className="text-base label-text"> Confirm Password </span>
             </label>
             <input
+               value ={user.confirmpassword}
+                 onChange = {(e) => setUser({...user, confirmpassword : e.target.value})}
               className="w-full  input-bordered h-10"
               type="password"
               placeholder=" Confirm Password"
@@ -77,9 +104,9 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
           </p>
 
           <div>
-            <button className="btn btn-block btn-sm mt-2 border  border-slate-700">
+            <button  type= 'submit' className="btn btn-block btn-sm mt-2 border  border-slate-700">
               {" "}
-              Login
+              Signup
             </button>
           </div>
         </form>
