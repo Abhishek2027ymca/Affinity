@@ -1,0 +1,5 @@
+ER1 
+Link in Login.jsx: <Link to="/Signup">Signup</Link>
+Route in App.js: path="/register"
+Result: Clicking the link led to a 404 error.
+Solution: Change the link to <Link to="/register">Signup</Link> to match the route
