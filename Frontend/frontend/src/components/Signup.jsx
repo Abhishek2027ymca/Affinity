@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react"; // need to istall reactdom and react-router-dom fro these
+import axios from "axios" ; 
+
 
 const Signup = () => {
   // taking input from user and storing in state
@@ -8,26 +10,42 @@ const Signup = () => {
     fullName: "",
     username: "",
     password: "",
-    confirmpassword: "",
+    confirmaPassword: "",
+    
+    
+    
     gender: "",
   });
 
   const handleCheckbox = (gender) => {
+    
     setUser({ ...user, gender });
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler =  async (e) => {
     e.preventDefault();
-    console.log(user);
-    // after submitting my fildes s will be emptied
-    setUser({
-      fullName: "",
-      username: "",
-      password: "",
-      confirmpassword: "",
-      gender: "",
-    });
+    try {
+      console.log(user)
+      const res = await axios.post('http://localhost:8080/api/v1/user/register', user, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      console.log(res);
+
+     setUser({
+        fullName: "",
+        username: "",
+        password: "",
+        confirmaPassword: "",
+        gender: "",
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
+
 
   return (
     <div className="min-w-96  mx-auto">
@@ -46,8 +64,8 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <span className="text-base label-text"> Full Name</span>
             </label>
             <input
-              value={user.fullname}
-              onChange={(e) => setUser({ ...user, fullname: e.target.value })}
+              value={user.fullName}
+              onChange={(e) => setUser({ ...user, fullName: e.target.value })}
               className="w-full  input-bordered h-10"
               type="text"
               placeholder=" Your Name"
@@ -88,9 +106,9 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <span className="text-base label-text"> Confirm Password </span>
             </label>
             <input
-              value={user.confirmpassword}
+              value={user.confirmaPassword}
               onChange={(e) =>
-                setUser({ ...user, confirmpassword: e.target.value })
+                setUser({ ...user, confirmaPassword: e.target.value })
               }
               className="w-full  input-bordered h-10"
               type="password"
@@ -103,7 +121,7 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <p>Male</p>
               <input
                 onChange={() => handleCheckbox("male")}
-                checked={user.gender == "male"}
+                checked={user.gender === "male"}
                 type="checkbox"
                 defaultChecked
                 className="checkbox mx-2"
@@ -113,7 +131,7 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <p>Female</p>
               <input
                 onChange={() => handleCheckbox("female")}
-                checked={user.gender == "female"}
+                checked={user.gender === "female"}
                 type="checkbox"
                 defaultChecked
                 className="checkbox mx-2"
@@ -128,7 +146,7 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
           <div>
             <button
               type="submit"
-              className="btn btn-block btn-sm mt-2 border  border-slate-700"
+              className="btn btn-block btn-md mt-2 border  border-slate-700"
             >
               {" "}
               Signup

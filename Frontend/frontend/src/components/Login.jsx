@@ -2,8 +2,36 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react"; // need to istall reactdom and react-router-dom fro these
 
 const Login = () => {
+
+
+  const [user, setUser] = useState({
+ 
+    username: "",
+    password: "",
+    
+  });
+
+ 
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    console.log(user);
+    // after submitting my fildes s will be emptied
+    setUser({
+      
+      username: "",
+      password: "",
+      
+    });
+  };
+
+
+
+
+
   return (
     <div className="min-w-96  mx-auto">
       <div
@@ -15,7 +43,7 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
           {" "}
           Login {" "}
         </h1>
-        <form action="">
+        <form  onSubmit = {onSubmitHandler}  action="">
          {/* no need of gull name  */}
           {/* 3 dic copies */}
           <div>
@@ -23,6 +51,8 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <span className="text-base label-text"> UserName</span>
             </label>
             <input
+             value={user.username}
+              onChange={(e) => setUser({ ...user, username:e.target.value })}
               className="w-full  input-bordered h-10"
               type="text"
               placeholder=" UserName"
@@ -36,6 +66,8 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
               <span className="text-base label-text"> Password </span>
             </label>
             <input
+             value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
               className="w-full  input-bordered h-10"
               type="password"
               placeholder=" Password"
@@ -53,9 +85,9 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
           </p>
 
           <div>
-            <button className="btn btn-block btn-sm mt-2 border  border-slate-700">
+            <button  type = "submit" className="btn btn-block btn-md mt-2 border  border-slate-700">
               {" "}
-              Signup
+              Login
             </button>
           </div>
         </form>
