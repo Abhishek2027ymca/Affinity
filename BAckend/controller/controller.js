@@ -31,8 +31,10 @@ export const register = async (req, res) => {
             fullName, username, password: hashedPassword, profilePhoto : gender === "male" ? maleProfilePhoto : femaleProfilePhoto, gender 
         })
 
-  return res.status(201).json({message : "user registered succesfully "})
-
+ return res.status(201).json({
+    message: "user registered successfully",
+    success: true  // ✅ Add this  ,   signup to login jump
+})
      
 } 
 

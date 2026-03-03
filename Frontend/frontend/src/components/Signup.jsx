@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; // need to istall reactdom and react-router-dom fro these
-import axios from "axios" ; 
-
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   // taking input from user and storing in state
@@ -11,41 +11,49 @@ const Signup = () => {
     username: "",
     password: "",
     confirmaPassword: "",
-    
-    
-    
     gender: "",
   });
 
+  const navigate = useNavigate();
+
   const handleCheckbox = (gender) => {
-    
     setUser({ ...user, gender });
   };
 
-  const onSubmitHandler =  async (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log(user)
-      const res = await axios.post('http://localhost:8080/api/v1/user/register', user, {
-        headers: {
-          'Content-Type': 'application/json'
+      console.log(user);
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/user/register",
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         },
-        withCredentials: true
-      });
-      console.log(res);
+      );
 
-     setUser({
-        fullName: "",
-        username: "",
-        password: "",
-        confirmaPassword: "",
-        gender: "",
-      });
-    } catch (e) {
-      console.log(e);
+      if (res.data.success) { // i f i get repsonse data s succes , naviagte to login page 
+        //as the data is scuuccesfulty  piut in backend . go to login directly
+        navigate("/Login"); // yes name is Login
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message)
+      
+      console.log(error);
     }
-  };
 
+    setUser({
+      fullName: "",
+      username: "",
+      password: "",
+      confirmaPassword: "",
+      gender: "",
+    });
+  };
 
   return (
     <div className="min-w-96  mx-auto">

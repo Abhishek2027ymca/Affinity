@@ -1,8 +1,10 @@
-
-
+                    
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; // need to istall reactdom and react-router-dom fro these
+import axios from "axios";
+import toast from "react-hot-toast"
+
 
 const Login = () => {
 
@@ -14,11 +16,38 @@ const Login = () => {
     
   });
 
+  const navigate = useNavigate();
+
  
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(user);
+
+ try {
+      console.log(user);
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/user/Login",
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        },
+      );
+
+       // i f i get repsonse data s succes , naviagte to home page 
+        //as the data is scuuccesfulty  piut in backend . go to home  directly
+        navigate("/"); // naviaget to home page 
+        console.log(res);
+
+
+    } catch (error) {
+      toast.error(error.response.data.message)
+      console.log(error);
+
+    }
+
     // after submitting my fildes s will be emptied
     setUser({
       
@@ -87,7 +116,7 @@ h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-bl
           <div>
             <button  type = "submit" className="btn btn-block btn-md mt-2 border  border-slate-700">
               {" "}
-              Login
+              login
             </button>
           </div>
         </form>
