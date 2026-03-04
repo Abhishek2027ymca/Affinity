@@ -1,6 +1,8 @@
 
 import React from 'react'
 import { BiSearchAlt2 } from "react-icons/bi" ; 
+import OtherUsers from './OtherUsers'
+
 
 const Sidebar = () => {
   return (                
@@ -15,7 +17,7 @@ const Sidebar = () => {
      {/* complete  serach abr */}
 
      <div className = "dividar px-3"></div>
-        
+        <OtherUsers/>
     </div>
   )
 }
