@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; // need to istall reactdom and react-router-dom fro these
 import axios from "axios";
 import toast from "react-hot-toast"
+import  {useDispatch} from "react-redux";
+import { setAuthUser } from "../redux/userSlice"; // ⬅️ ADD THIS IMPORT
+//import these lines 
 
 
 const Login = () => {
@@ -15,6 +18,7 @@ const Login = () => {
     password: "",
     
   });
+  const dispatch =useDispatch() ;
 
   const navigate = useNavigate();
 
@@ -39,7 +43,12 @@ const Login = () => {
        // i f i get repsonse data s succes , naviagte to home page 
         //as the data is scuuccesfulty  piut in backend . go to home  directly
         navigate("/"); // naviaget to home page 
-        console.log(res);
+        // console.log(res.data);
+        // i will get an object when i login 
+        // that object willb be send to 
+        dispatch(setAuthUser(res.data))
+        //  this is redux part 
+
 
 
     } catch (error) {
