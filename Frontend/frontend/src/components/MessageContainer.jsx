@@ -1,5 +1,6 @@
 import React from "react";
 import SendInput from "./SendInput";
+import Messages from "./Messages";
 
 const MessageContainer = () => {
   return (
@@ -21,6 +22,10 @@ const MessageContainer = () => {
           <div />
         </div>
     </div>
+     
+     {/* message showcasing */}
+
+     <Messages></Messages>
     {/* messagfe input here  */}
      <SendInput/>
      </div>

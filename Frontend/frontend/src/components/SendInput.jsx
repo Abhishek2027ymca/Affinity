@@ -14,6 +14,7 @@ const SendInput = () => {
           type='submit'
           className='absolute flex inset-y-0 end-0 items-center pr-4'
         >
+          
           <IoSend />
         </button>
       </div>

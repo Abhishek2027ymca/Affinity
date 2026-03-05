@@ -10,6 +10,11 @@ const OtherUsers = () => {
     <OtherUser/>
     
     <OtherUser/>
+    <OtherUser/>
+    <OtherUser/>
+    <OtherUser/>
+    <OtherUser/>
+    <OtherUser/>
    </div>
   );
 };
