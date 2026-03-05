@@ -7,7 +7,7 @@ const userSlice = createSlice({
     name : "user",
     initialState:{
           authUser : null ,
-          OtherUsers:null,
+          OtherUsers :null,
        
     } ,
     reducers:{
