@@ -4,7 +4,7 @@ const OtherUser = () => {
   return (
     <div>
        
-      <div className='flex gap-2 items-center hover:bg-zinc-200 rounded p-2 cursor-pointer'>
+      <div className='flex gap-2 items-center text-slate-300 hover:bg-zinc-600 rounded p-2 cursor-pointer'>
         <div className='avatar online'>
           <div className='w-12 rounded-full'>
             <img 
@@ -14,7 +14,7 @@ const OtherUser = () => {
           </div>
         </div>
         <div className='flex flex-col flex-1'>
-          <div className='flex justify-between items-center gap-2 flex-1'>
+          <div className='flex justify-between items-center gap-2 flex-1 ' >
             <p>Abhishek CEDS </p>
           </div>
         </div>

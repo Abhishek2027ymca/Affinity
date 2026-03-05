@@ -16,7 +16,7 @@ const Sidebar = () => {
       </form>
      {/* complete  serach abr */}
 
-     <div className = "dividar px-3"></div>
+     <div className = "divider px-3"></div>
         <OtherUsers/>
         <div className ='mt-2'>
             <button className = 'btn btn-sm bg-slate-50'>Logout </button>
