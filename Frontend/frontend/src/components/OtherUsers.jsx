@@ -11,7 +11,7 @@ const OtherUsers = () => {
   if (!OtherUsers) return; // just return back if Other user is null
 
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto  flex-1">
       {OtherUsers?.map((user) => {
         return (
           //pasw witha key

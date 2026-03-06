@@ -22,8 +22,9 @@ export const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password , 5)
         // now need to add hasjed password 
 
-        const maleProfilePhoto = "https://avatar.iran.liara.run/public/boy?userName=${userName}"
-        const femaleProfilePhoto = "https://avatar.iran.liara.run/public/girl?userName=${userName}"
+      // In your backend controller.js register function:
+const maleProfilePhoto = `https://avatar.iran.liara.run/public/boy?username=${username}`
+const femaleProfilePhoto = `https://avatar.iran.liara.run/public/girl?username=${username}` 
         // const profilePhoto = gender === "male" ? maleProfilePhoto : femaleProfilePhoto;
 
 
