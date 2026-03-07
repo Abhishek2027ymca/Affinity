@@ -16,6 +16,8 @@ const OtherUsers = () => {
         return (
           //pasw witha key
           <OtherUser key={user._id} user={user} />
+
+          
         );
       })}
     </div>

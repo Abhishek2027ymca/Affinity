@@ -14,7 +14,7 @@ const useGetOtherUsers = () => {
       try {
         axios.defaults.withCredentials = true ;// very import line other wise you will get CORS error 
         const res = await axios.get('http://localhost:8080/api/v1/user/');
-        console.log(res);
+        // console.log(res);
         // now store these in store of redux 
         
         dispatch(setOtherUsers(res.data)) ///  iske andar jo bhejenge vo asit is action .paload of setither user  mein jaayega 

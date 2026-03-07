@@ -1,30 +1,28 @@
 import axios from "axios";
 
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react";
+import {useSelector} from "react-redux";
 
 const useGetMessages = async () => {
- useEffect(()=> {
-    const fetchMessages = async()=>{
-        
-      try{
-  // as message fetch is a autheticated endpoitn ,uses auth middleware
+  const { selectedUser } = useSelector((store) => store.user);
 
-         axios.defaults.withCredentials = true ;
-         
-         // this id is dynamic ,, 
-const res = await axios.get(`http://localhost:8080/api/v1/message/6991e7f92fa7e417b5916de6`);
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        // as message fetch is a autheticated endpoitn ,uses auth middleware
 
+        axios.defaults.withCredentials = true;
+
+        // this id is dynamic
+        const res = await axios.get(
+          `http://localhost:8080/api/v1/message/${selectedUser?._id}`,
+        );
+      } catch (error) {
+        console.log(error);
       }
-      catch(error){
+    };
+    fetchMessages()
+  }, []);
+};
 
-         console.log(error);
-
-      }
-                     
-
-
-    }
- } , [])
-}
-
-export default useGetMessages
+export default useGetMessages;
