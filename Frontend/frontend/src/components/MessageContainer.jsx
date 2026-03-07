@@ -1,8 +1,11 @@
 import React from "react";
 import SendInput from "./SendInput";
 import Messages from "./Messages";
+import { useSelector } from "react-redux";
 
 const MessageContainer = () => {
+const {selectedUser}  = useSelector(store=>store.user);
+
   return (
    <div className = 'md:min-w-[550px] flex flex-col' >
 
@@ -17,7 +20,7 @@ const MessageContainer = () => {
         </div>
         <div className="flex flex-col flex-1">
           <div className="flex justify-between  gap-2 ">
-            <p>Abhishek CEDS </p>
+            <p> {selectedUser?.fullName}</p>
           </div>
           <div />
         </div>
