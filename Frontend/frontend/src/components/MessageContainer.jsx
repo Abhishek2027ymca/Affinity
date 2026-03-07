@@ -13,8 +13,8 @@ const {selectedUser}  = useSelector(store=>store.user);
         <div className="avatar online">
           <div className="w-12 rounded-full">
             <img
-              src="https://wallpapers.com/images/featured/cool-profile-picture-87h46gcobjl5e4xu.jpg"
-              alt="user avatar"
+              src={selectedUser?.profilePhoto}
+              alt="User Image"
             />
           </div>
         </div>
