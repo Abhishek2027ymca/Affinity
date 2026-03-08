@@ -3,15 +3,16 @@ import { IoSend } from "react-icons/io5";
 import { useState } from 'react';
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
+import { setMessages } from '../redux/messageSlice';
+
 
 const SendInput =   () => {
 
   const [message, setMessage] = useState("") ;
   const dispatch = useDispatch();
-  // oid of my selescted user 
-  const {selectedUser} = useSelector(store=>store.user)
-
-   const onSubmitHandler = async (e) => {
+  const {selectedUser} = useSelector(store=>store.user);
+  const {messages}  = useSelector(store=>store.message);
+  const onSubmitHandler = async (e) => {
     e.preventDefault(); // an event
     
     try{
@@ -20,13 +21,16 @@ const res = await axios.post(`http://localhost:8080/api/v1/message/send/${select
                         
 }, withCredentials:true 
 })
+
 console.log(res);
+dispatch(setMessages([...messages,res?.data?.newMessage]))
     }
     catch(e){
     console.log(e);
     
     }
-
+  // after sending te message . make  the imnput box empty 
+  setMessage("");
 
    }
 

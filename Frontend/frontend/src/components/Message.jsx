@@ -1,6 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 function Message({message}) {
+
+  const {selectedUser}  = useSelector(store=>store.user);
+
   return (
     <div>
       
@@ -9,7 +13,7 @@ function Message({message}) {
           <div className="w-10 rounded-full">
             <img
               alt="Tailwind CSS chat bubble component"
-              src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+              src={selectedUser?.profilePhoto}
             />
           </div>
         </div>

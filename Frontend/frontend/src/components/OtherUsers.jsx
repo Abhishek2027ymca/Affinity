@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 const OtherUsers = () => {
   // my custom hooks
+                         
   useGetOtherUsers();
   const { OtherUsers } = useSelector((store) => store.user);
   // early retiurn makesure iin react
@@ -17,7 +18,7 @@ const OtherUsers = () => {
           //pasw witha key
           <OtherUser key={user._id} user={user} />
 
-          
+             
         );
       })}
     </div>

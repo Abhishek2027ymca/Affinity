@@ -22,7 +22,7 @@ export const sendMessage = async (req, res) => {
 
         const newMessage = await Message.create({
             senderId,
-            receiverId,  // ✅ FIXED
+            receiverId,  //
             message
         })
 
@@ -34,13 +34,12 @@ export const sendMessage = async (req, res) => {
         await gotConversation.save(); //  this saves the conversation with the new message added to the messages array.
 
         return res.status(201).json({
-            message: "Message sent successfully",
-            data: newMessage   // addedd ag se 
+           newMessage  // addedd ag se 
         });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Server error" });  // ✅ ADDED
-    }
+    }  
 }
                                                                                     
 // !!!!          statrt implemting SOCKET IO
