@@ -1,14 +1,21 @@
-import React from "react";
-import { useSelector } from "react-redux";
-
+import React, { useEffect } from "react";
+import {useSelector} from "react-redux";
+import {useRef} from "react";
 function Message({message}) {
 
-  const {selectedUser}  = useSelector(store=>store.user);
+  const scroll = useRef();
+ useEffect(() => {
+      scroll.current?.scrollIntoView({ behavior: "smooth" });
+}, [message]); // whenver message var. changes , useeffect will be used 
+                    
+
+  const {selectedUser}  = useSelector(store=>store.user);//!! important other than vdo addeed 
+
 
   return (
-    <div>
+    <>
       
-      <div className="chat chat-end">
+      <div  ref ={scroll} className="chat chat-end">
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
             <img
@@ -22,7 +29,7 @@ function Message({message}) {
         </div>
         <div className="chat-bubble">{message?.message}</div>
       </div>
-    </div>
+    </>
   );
 }
 

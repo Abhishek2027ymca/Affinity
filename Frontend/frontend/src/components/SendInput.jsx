@@ -1,10 +1,9 @@
-import React from 'react';
 import { IoSend } from "react-icons/io5";
 import { useState } from 'react';
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { setMessages } from '../redux/messageSlice';
-
+import {   React } from 'react';
 
 const SendInput =   () => {
 
