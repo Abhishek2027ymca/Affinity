@@ -15,6 +15,7 @@ function Message({message}) {
 
   return (
     <>
+   
       
       <div  ref ={scroll} className={`chat ${authUser?._id === message?.senderId ? 'chat-end' : 'chat-start'} `}>
         <div className="chat-image avatar">

@@ -7,6 +7,10 @@ const MessageContainer = () => {
 const {selectedUser}  = useSelector(store=>store.user);
 
   return (
+    
+    <>
+    {
+      selectedUser !== null ?(
    <div className = 'md:min-w-[550px] flex flex-col' >
 
       <div className="flex gap-2 items-center  bg-zinc-700 text-white px-4 py-2 mb-2">
@@ -31,7 +35,13 @@ const {selectedUser}  = useSelector(store=>store.user);
      <Messages></Messages>
     {/* messagfe input here  */}
      <SendInput/>
-     </div>
+     </div>) :(
+      <div> hi , lets tatrt the chats </div> 
+     )
+}
+     </>
+
+
   );
 };
 
