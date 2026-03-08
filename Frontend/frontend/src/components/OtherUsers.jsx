@@ -9,7 +9,7 @@ const OtherUsers = () => {
   useGetOtherUsers();
   const { OtherUsers } = useSelector((store) => store.user);
   // early retiurn makesure iin react
-  if (!OtherUsers) return; // just return back if Other user is null
+  if (!OtherUsers) return null; // just return back if Other user is null
 
   return (
     <div className="overflow-auto  flex-1">
