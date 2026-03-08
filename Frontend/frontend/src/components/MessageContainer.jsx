@@ -2,10 +2,10 @@ import React , {useEffect } from "react";
 import SendInput from "./SendInput";
 import Messages from "./Messages";
 import {useSelector , useDispatch} from "react-redux";
-import {setSelectedUser} from '../redux/userSlice' ;
+import {setSelectedUser, setAuthUser} from '../redux/userSlice' ;
 
 const MessageContainer = () => {
-const {selectedUser}  = useSelector(store=>store.user);
+const {selectedUser ,authUser}  = useSelector(store=>store.user);
 // user cleans when it getlogiut ,
 const dispatch = useDispatch();
 
@@ -46,7 +46,16 @@ useEffect(()=>{
     {/* messagfe input here  */}
      <SendInput/>
      </div>) :(
-      <div> hi , lets tatrt the chats </div> 
+      
+
+         <div className = 'md:min-w-[550px] flex flex-col justify-center items-center' >
+                <h1 className ='text-4xl text-white font-bold' > Hi </h1> 
+                <h1 className= 'text-3xl text-zinc'> Let's start Conversation </h1> 
+
+           </div>
+
+    
+
      )
 }
      </>
