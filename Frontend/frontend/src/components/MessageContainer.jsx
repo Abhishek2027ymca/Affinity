@@ -1,13 +1,23 @@
-import React from "react";
+import React , {useEffect } from "react";
 import SendInput from "./SendInput";
 import Messages from "./Messages";
-import { useSelector } from "react-redux";
+import {useSelector , useDispatch} from "react-redux";
+import {setSelectedUser} from '../redux/userSlice' ;
 
 const MessageContainer = () => {
 const {selectedUser}  = useSelector(store=>store.user);
+// user cleans when it getlogiut ,
+const dispatch = useDispatch();
+
+
+
+useEffect(()=>{
+  return ()=> dispatch(setSelectedUser(null)) // redux
+} ,[] )
 
   return (
-    
+
+
     <>
     {
       selectedUser !== null ?(
