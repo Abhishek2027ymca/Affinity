@@ -10,6 +10,7 @@ const userSlice = createSlice({
           selectedUser : null ,
           OnLineUsers :null ,
        
+          
     } ,
     reducers:{
            setAuthUser:(state,action)=>{
