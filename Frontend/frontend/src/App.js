@@ -1,39 +1,47 @@
-// import logo from './logo.svg';
 import './App.css';
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'; 
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import { useSelector  , useDispatch} from "react-redux";
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import { setOnlineUsers } from './redux/userSlice';
+import { setSocket } from './redux/socketSlice';
 
 
-// creatinf fromnmtend router 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element:<HomePage/>
+    { path: "/", element: <HomePage /> },
+    { path: "/register", element: <Signup /> },
+    { path: "/login", element: <Login /> }
+]);
 
-  },
-  {
-    path: "/register",
-    element:<Signup/>
-
-  },
-  {
-    path: "/login",
-    element:<Login/>
-
-  }
-
-
-])
 function App() {
-  return (
-    <div className="p-4 h-screen flex items-center justify-center">
+    const { authUser } = useSelector(store => store.user);
 
-<RouterProvider router = {router}/>
+const dispatch = useDispatch();
 
-    </div>
-  );
+    useEffect(() => {
+        if (authUser) {
+            const socket = io('http://localhost:8080', {
+                query: { userId: authUser._id }
+                
+            });
+            dispatch(setSocket(socket));
+            
+            socket.on('getOnLineUsers' , (OnLineUsers)=>{
+           
+                dispatch(setOnlineUsers(OnLineUsers))
+            })
+          
+       }
+    }, [authUser]);
+
+    return (
+        <div className="p-4 h-screen flex items-center justify-center">
+            <RouterProvider router={router} />
+        </div>
+    );
 }
 
 export default App;
