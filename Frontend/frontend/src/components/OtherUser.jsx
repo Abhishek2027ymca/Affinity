@@ -1,25 +1,27 @@
 import React from "react";
-import { useDispatch , useSelector} from "react-redux";
-import { setSelectedUser } from "../redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedUser  , setOnlineUsers  } from "../redux/userSlice";
 
 const OtherUser = ({ user }) => {
   const dispatch = useDispatch();
-
-  const {selectedUser} = useSelector(store => store.user);
+  const { selectedUser, OnLineUsers } = useSelector((store)=>store.user);
 
   const selectedUserHandler = (user) => {
-    dispatch(setSelectedUser(user)); 
-    
-    // to retrive ifo , on clicking obnthe particular persomnms chat box
+    dispatch(setSelectedUser(user));
+    // You could log or fetch chat info here if needed
   };
+
+  const isOnline =   OnLineUsers.includes(user._id);
 
   return (
     <>
       <div
         onClick={() => selectedUserHandler(user)}
-        className={` ${selectedUser?._id === user?._id ? 'bg-zinc-600' : ''} flex gap-2 items-center text-slate-300 hover:bg-gray-600 rounded p-2 cursor-pointer`}
+        className={`${
+          selectedUser?._id === user?._id ? "bg-zinc-600" : ""
+        } flex gap-2 items-center text-slate-300 hover:bg-gray-600 rounded p-2 cursor-pointer`}
       >
-        <div className="avatar online">
+        <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
             <img src={user?.profilePhoto} alt="user profile" />
           </div>
@@ -30,7 +32,7 @@ const OtherUser = ({ user }) => {
           </div>
         </div>
       </div>
-      <div className="divider my-0 py-0 h-1"> </div>
+      <div className="divider my-0 py-0 h-1"></div>
     </>
   );
 };

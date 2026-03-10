@@ -8,7 +8,7 @@ const userSlice = createSlice({
           authUser : null ,
           OtherUsers :null,
           selectedUser : null ,
-          OnLineUsers :null ,
+          OnLineUsers : [],
        
           
     } ,

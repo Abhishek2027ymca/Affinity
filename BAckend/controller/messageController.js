@@ -1,6 +1,7 @@
 // how to user send messages 
 import { conversation } from "../model/conversation.js";
 import { Message } from "../model/messagemodel.js"
+import { io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
     try {
@@ -43,6 +44,11 @@ export const sendMessage = async (req, res) => {
 }
                                                                                     
 // !!!!          statrt implemting SOCKET IO
+const recieverSocketId = getReceiverSocketId(receiverId);
+if(recieverSocketId){
+    io.to(recieverSocketId).emit("newMessage")
+}
+
 
 export const getMessage = async (req, res) => {
     try {  // i will take reciever in params , snderidfrom id 
