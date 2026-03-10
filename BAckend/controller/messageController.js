@@ -1,8 +1,9 @@
 // how to user send messages 
 import { conversation } from "../model/conversation.js";
 import { Message } from "../model/messagemodel.js"
-import { io } from "../socket/socket.js";
+import { io, getReceiverSocketId } from "../socket/socket.js";
 
+// receiverId
 export const sendMessage = async (req, res) => {
     try {
         const senderId = req.id; /// loggedin user  stored by  the middleware 
@@ -34,39 +35,40 @@ export const sendMessage = async (req, res) => {
 
         await gotConversation.save(); //  this saves the conversation with the new message added to the messages array.
 
+        // !!!!          statrt implemting SOCKET IO
+
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
+
+
         return res.status(201).json({
-           newMessage  // addedd ag se 
+            newMessage  // addedd ag se 
         });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Server error" });  // ✅ ADDED
-    }  
+    }
 }
-                                                                                    
-// !!!!          statrt implemting SOCKET IO
-const recieverSocketId = getReceiverSocketId(receiverId);
-if(recieverSocketId){
-    io.to(recieverSocketId).emit("newMessage")
-}
-
 
 export const getMessage = async (req, res) => {
     try {  // i will take reciever in params , snderidfrom id 
         const receiverId = req.params.id.trim();  // ✅ FIXED , take recier id an dthen    , i am the reciever                 
         const senderId = req.id.trim();  // i ma hte sender  . stored in req.id
 
-             const gotConversation = await conversation.findOne({  // ✅ FIXED - renamed to gotConversation
+        const gotConversation = await conversation.findOne({  // ✅ FIXED - renamed to gotConversation
             participants: { $all: [senderId, receiverId] }
         }).populate("messages");// .populte will treturn all the messages in the conversation
         // got conversation will have the conversation document with the messages array populated with the actual message documents instead of just their IDs.
-         // for t his end point we need reciever reciever id . ?
-    //      console.log(senderId, receiverId); // ✅ ADDED - for debugging
-    //    console.log(gotConversation); //prinyting the conversation
-       // http://localhost:8080/api/v1/message/6991e7f92fa7e417b5916de6    _________ this is recievers id                                                                                           
+        // for t his end point we need reciever reciever id . ?
+        //      console.log(senderId, receiverId); // ✅ ADDED - for debugging
+        //    console.log(gotConversation); //prinyting the conversation
+        // http://localhost:8080/api/v1/message/6991e7f92fa7e417b5916de6    _________ this is recievers id                                                                                           
 
-return res.status(200).json(
-     gotConversation?.messages || [] // ✅ FIXED - added optional chaining and default to empty array
-)
+        return res.status(200).json(
+            gotConversation?.messages || [] // ✅ FIXED - added optional chaining and default to empty array
+        )
 
     } catch (error) {
         console.log(error);
