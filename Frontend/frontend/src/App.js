@@ -18,6 +18,7 @@ const router = createBrowserRouter([
 
 function App() {
     const { authUser } = useSelector(store => store.user);
+    const { socket } = useSelector(store => store.socket);
 
 const dispatch = useDispatch();
 
@@ -34,7 +35,17 @@ const dispatch = useDispatch();
                 dispatch(setOnlineUsers(OnLineUsers))
             })
           
+            return ()=> socket.close(); // cleanup
+
        }
+
+       else{
+        if(socket){
+            socket.close();
+            dispatch(setSocket(null))
+        }
+       }
+
     }, [authUser]);
 
     return (
