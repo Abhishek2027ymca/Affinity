@@ -25,9 +25,9 @@ export const register = async (req, res) => {
       // In your backend controller.js register function:
 // Using RoboHash - reliable and fun avatars
 // Using placeholder.com - 100% reliable
-const maleProfilePhoto = `https://via.placeholder.com/150/0D8ABC/FFFFFF?text=${username.charAt(0).toUpperCase()}`;
-const femaleProfilePhoto = `https://via.placeholder.com/150/FF69B4/FFFFFF?text=${username.charAt(0).toUpperCase()}`;
-
+// Using RoboHash - reliable and fun avatars
+const maleProfilePhoto = `https://robohash.org/${username}?set=set2&size=200x200`;
+const femaleProfilePhoto = `https://robohash.org/${username}?set=set4&size=200x200`;
         // const profilePhoto = gender === "male" ? maleProfilePhoto : femaleProfilePhoto;
 
 
