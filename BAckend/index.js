@@ -34,7 +34,7 @@
 //     connectdb();
 //     console.log(`server is listening to your port ${PORT}`);
 // });
-import express from "express";  // ✅ ADD THIS BACK
+import express from "express";  //
 
 import dotenv from "dotenv";
 import connectdb from "./config/db.js";
@@ -42,7 +42,7 @@ import userRoute from "./Routes/userRoute.js";
 import messageRoute from "./Routes/messageRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { app, server, io } from "./socket/socket.js";  // ✅ This imports app, server, io
+import { app, server, io } from "./socket/socket.js";  // 
 // REMOVE: import express from "express"; (not needed)
 
 dotenv.config({});
@@ -50,12 +50,12 @@ dotenv.config({});
 const PORT = process.env.PORT || 8080;
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));  // ❌ This line is the problem
+app.use(express.urlencoded({ extended: true }));  
 app.use(express.json());
 app.use(cookieParser());
 
 const corsOption = {
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',  // ✅ changed
     credentials: true
 }
 app.use(cors(corsOption));
