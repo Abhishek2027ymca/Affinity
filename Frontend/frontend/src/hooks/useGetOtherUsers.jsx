@@ -13,7 +13,7 @@ const useGetOtherUsers = () => {
     const fetchOtherUsers = async () => {
       try {
         axios.defaults.withCredentials = true ;// very import line other wise you will get CORS error 
-        const res = await axios.get('http://localhost:8080/api/v1/user/');  
+     const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/`);
         // console.log(res);
         // now store these in store of redux 
         
