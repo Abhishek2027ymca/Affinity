@@ -30,7 +30,7 @@ const Login = () => {
  try {
       console.log(user);
       const res = await axios.post(
-        "${process.env.REACT_APP_BACKEND_URL}/api/v1/user/Login",
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/Login`,
         user,
         {
           headers: {
