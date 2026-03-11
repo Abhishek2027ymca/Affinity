@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import SendInput from "./SendInput";
 import Messages from "./Messages";
 import { useSelector, useDispatch } from "react-redux";
-import { setSelectedUser, setAuthUser } from "../redux/userSlice";
+import { setSelectedUser, setAuthUser , OnLineUsers } from "../redux/userSlice";
 
 const MessageContainer = () => {
   const { selectedUser, authUser  , OnLineUsers } = useSelector((store) => store.user);
@@ -22,7 +22,7 @@ const MessageContainer = () => {
                 selectedUser !== null ? (
                     <div className='md:min-w-[550px] flex flex-col'>
                         <div className='flex gap-2 items-center bg-zinc-800 text-white px-4 py-2 mb-2'>
-                            <div className={`avatar ${isOnline ? 'online' : ''}`}>
+                            <div className={`avatar ${isOnline ? 'online' :''}`}>
                                 <div className='w-12 rounded-full'>
                                     <img src={selectedUser?.profilePhoto} alt="user-profile" />
                                 </div>
