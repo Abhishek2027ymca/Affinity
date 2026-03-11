@@ -13,7 +13,7 @@ const Messages = () => {
 const {messages} = useSelector(store=>store.message);
     if(!messages)return ; // early reurn check 
   return (
-    <div  className =' px-4  flex-1 overflow-auto'>
+    <div  className ='px-4  flex-1 overflow-auto'>
       
       {
        messages &&  messages?.map((message) => {

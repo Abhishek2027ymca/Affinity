@@ -33,8 +33,11 @@ export const sendMessage = async (req, res) => {
             // 
         }
 
-        await gotConversation.save(); //  this saves the conversation with the new message added to the messages array.
+        await gotConversation.save();
+         //  this saves the conversation with the new message added to the messages array.
 
+
+         await Promise.all([gotConversation.save(), newMessage.save()]) ;                       
         // !!!!          statrt implemting SOCKET IO
 
         const receiverSocketId = getReceiverSocketId(receiverId);

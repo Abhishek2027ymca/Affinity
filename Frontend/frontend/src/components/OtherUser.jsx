@@ -11,7 +11,8 @@ const OtherUser = ({ user }) => {
     // You could log or fetch chat info here if needed
   };
 
-  const isOnline =   OnLineUsers.includes(user._id);
+  const isOnline =  OnLineUsers?.includes(user._id);
+  
 
   return (
     <>
