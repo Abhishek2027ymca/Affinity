@@ -23,8 +23,11 @@ export const register = async (req, res) => {
         // now need to add hasjed password 
 
       // In your backend controller.js register function:
-const maleProfilePhoto = `https://avatar.iran.liara.run/public/boy?username=${username}`
-const femaleProfilePhoto = `https://avatar.iran.liara.run/public/girl?username=${username}` 
+// Using RoboHash - reliable and fun avatars
+// Using placeholder.com - 100% reliable
+const maleProfilePhoto = `https://via.placeholder.com/150/0D8ABC/FFFFFF?text=${username.charAt(0).toUpperCase()}`;
+const femaleProfilePhoto = `https://via.placeholder.com/150/FF69B4/FFFFFF?text=${username.charAt(0).toUpperCase()}`;
+
         // const profilePhoto = gender === "male" ? maleProfilePhoto : femaleProfilePhoto;
 
 
