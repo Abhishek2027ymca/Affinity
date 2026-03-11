@@ -17,7 +17,7 @@ const useGetMessages = async () => {
 
         // this id is dynamic
         const res = await axios.get(
-          `http://localhost:8080/api/v1/message/${selectedUser?._id}`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/v1/message/${selectedUser?._id}`,
         );
         console.log(res);
         dispatch(setMessages(res.data));

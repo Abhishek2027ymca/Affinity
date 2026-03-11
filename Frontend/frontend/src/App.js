@@ -24,7 +24,7 @@ const dispatch = useDispatch();
 
     useEffect(() => {
         if (authUser) {
-            const socket = io('http://localhost:8080', {
+            const socket = io('${process.env.REACT_APP_BACKEND_URL}', {
                 query: { userId: authUser._id }
                 
             });

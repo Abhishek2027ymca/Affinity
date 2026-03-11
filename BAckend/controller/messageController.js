@@ -67,7 +67,7 @@ export const getMessage = async (req, res) => {
         // for t his end point we need reciever reciever id . ?
         //      console.log(senderId, receiverId); // ✅ ADDED - for debugging
         //    console.log(gotConversation); //prinyting the conversation
-        // http://localhost:8080/api/v1/message/6991e7f92fa7e417b5916de6    _________ this is recievers id                                                                                           
+        // ${process.env.REACT_APP_BACKEND_URL}/api/v1/message/6991e7f92fa7e417b5916de6    _________ this is recievers id                                                                                           
 
         return res.status(200).json(
             gotConversation?.messages || [] // ✅ FIXED - added optional chaining and default to empty array
