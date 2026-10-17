@@ -1,32 +1,36 @@
-import axios from "axios";
-
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import api from "../api";
 import { setMessages } from "../redux/messageSlice";
+import { clearUnread } from "../redux/uiSlice";
 
-const useGetMessages = async () => {
+// loads the conversation with the selected user whenever the selection changes
+const useGetMessages = () => {
   const { selectedUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const selectedId = selectedUser?._id;
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        // as message fetch is a autheticated endpoitn ,uses auth middleware
+    if (!selectedId) return;
+    let cancelled = false; // ignore a slow response from a chat we already left
 
-        axios.defaults.withCredentials = true;
+    dispatch(setMessages(null)); // show the loader instead of the previous chat
+    dispatch(clearUnread(selectedId));
 
-        // this id is dynamic
-        const res = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/v1/message/${selectedUser?._id}`,
-        );
-        console.log(res);
-        dispatch(setMessages(res.data));
-      } catch (error) {
+    api
+      .get(`/api/v1/message/${selectedId}`)
+      .then((res) => {
+        if (!cancelled) dispatch(setMessages(res.data));
+      })
+      .catch((error) => {
         console.log(error);
-      }
+        if (!cancelled) dispatch(setMessages([]));
+      });
+
+    return () => {
+      cancelled = true;
     };
-    fetchMessages();
-  }, [selectedUser?._id , setMessages]);
+  }, [selectedId, dispatch]);
 };
 
 export default useGetMessages;

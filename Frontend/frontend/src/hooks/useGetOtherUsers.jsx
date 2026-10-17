@@ -1,33 +1,24 @@
-import React from "react";
-import axios from "axios";
-import {useEffect } from "react"
-import {useDispatch} from "react-redux";
-import {setOtherUsers } from "../redux/userSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import api from "../api";
+import { setOtherUsers, setAuthUser } from "../redux/userSlice";
 
 const useGetOtherUsers = () => {
-  // we sue useeffect
-  const  dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  
   useEffect(() => {
     const fetchOtherUsers = async () => {
       try {
-        axios.defaults.withCredentials = true ;// very import line other wise you will get CORS error 
-     const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/`);
-        // console.log(res);
-        // now store these in store of redux 
-        
-        dispatch(setOtherUsers(res.data)) ///  iske andar jo bhejenge vo asit is action .paload of setither user  mein jaayega 
-
-    
+        const res = await api.get("/api/v1/user/");
+        dispatch(setOtherUsers(res.data));
       } catch (e) {
         console.log(e);
+        // cookie expired but we still have a saved user -> send them back to login
+        if (e.response?.status === 401) dispatch(setAuthUser(null));
       }
-      
-
     };
-    fetchOtherUsers(); // jaise heen homeseceren par vist akru ,  data fetch ho jaaye
-  }, []);
+    fetchOtherUsers();
+  }, [dispatch]);
 };
 
 export default useGetOtherUsers;

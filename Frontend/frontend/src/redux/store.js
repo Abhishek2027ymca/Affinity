@@ -2,6 +2,7 @@ import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import userReducer from "./userSlice.js"
 import messageReducer from "./messageSlice.js";
 import socketReducer from "./socketSlice.js"
+import uiReducer from "./uiSlice.js"
 
 import {
     persistReducer,
@@ -18,14 +19,15 @@ const persistConfig = {
     key: 'root',
     version: 1,
     storage,
-    blacklist: ['socket']  
+    blacklist: ['socket', 'ui']
 
 }
 
 const rootReducer = combineReducers({
     user: userReducer,
     message: messageReducer,
-    socket: socketReducer
+    socket: socketReducer,
+    ui: uiReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
