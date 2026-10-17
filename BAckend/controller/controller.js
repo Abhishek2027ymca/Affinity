@@ -20,12 +20,7 @@ export const register = async (req, res) => {
 
 
         const hashedPassword = await bcrypt.hash(password , 5)
-        // now need to add hasjed password 
-
-      // In your backend controller.js register function:
-// Using RoboHash - reliable and fun avatars
-// Using placeholder.com - 100% reliable
-// Using RoboHash - reliable and fun avatars
+        
 const maleProfilePhoto = `https://robohash.org/${username}?set=set2&size=200x200`;
 const femaleProfilePhoto = `https://robohash.org/${username}?set=set4&size=200x200`;
         // const profilePhoto = gender === "male" ? maleProfilePhoto : femaleProfilePhoto;
@@ -64,7 +59,7 @@ export const login = async (req,res)=>{
         const user = await User.findOne({username});
 
         if(!user){
-            return res.status(400).json({
+              return res.status(400).json({
                 message:"incorrect username or password",
                 success:false 
             })

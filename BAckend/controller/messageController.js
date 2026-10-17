@@ -1,7 +1,7 @@
 // how to user send messages 
 import { conversation } from "../model/conversation.js";
 import { Message } from "../model/messagemodel.js"
-import { io, getReceiverSocketId } from "../socket/socket.js";
+import { io, getReceiverSocketId } from "../Socket/socket.js";
 
 // receiverId
 export const sendMessage = async (req, res) => {

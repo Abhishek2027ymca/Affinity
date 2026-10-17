@@ -16,9 +16,7 @@ const OtherUsers = () => {
       {OtherUsers?.map((user) => {
         return (
           //pasw witha key
-          <OtherUser key={user._id} user={user} />
-
-             
+          <OtherUser key={user._id} user={user} />  
         );
       })}
     </div>
