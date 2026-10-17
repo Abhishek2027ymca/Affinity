@@ -1,40 +1,39 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedUser  , setOnlineUsers  } from "../redux/userSlice";
+import { setSelectedUser } from "../redux/userSlice";
+import Avatar from "./Avatar";
 
 const OtherUser = ({ user }) => {
   const dispatch = useDispatch();
-  const { selectedUser, OnLineUsers } = useSelector((store)=>store.user);
+  const { selectedUser, OnLineUsers } = useSelector((store) => store.user);
+  const unread = useSelector((store) => store.ui.unread[user._id] || 0);
+  const isTyping = useSelector((store) => !!store.ui.typing[user._id]);
 
-  const selectedUserHandler = (user) => {
-    dispatch(setSelectedUser(user));
-    // You could log or fetch chat info here if needed
-  };
-
-  const isOnline =  OnLineUsers?.includes(user._id);
-  
+  const isOnline = OnLineUsers?.includes(user._id);
+  const isSelected = selectedUser?._id === user._id;
 
   return (
-    <>
-      <div
-        onClick={() => selectedUserHandler(user)}
-        className={`${
-          selectedUser?._id === user?._id ? "bg-zinc-600" : ""
-        } flex gap-2 items-center text-slate-300 hover:bg-gray-600 rounded p-2 cursor-pointer`}
-      >
-        <div className={`avatar ${isOnline ? "online" : ""}`}>
-          <div className="w-12 rounded-full">
-            <img src={user?.profilePhoto} alt="user profile" />
-          </div>
-        </div>
-        <div className="flex flex-col flex-1">
-          <div className="flex justify-between items-center gap-2 flex-1 ">
-            <p>{user?.fullName}</p>
-          </div>
-        </div>
+    <button
+      onClick={() => dispatch(setSelectedUser(user))}
+      className={`flex w-full items-center gap-3 rounded-2xl p-3 text-left transition ${
+        isSelected ? "bg-violet-500/20 ring-1 ring-violet-400/30" : "hover:bg-white/5"
+      }`}
+    >
+      <Avatar src={user.profilePhoto} name={user.fullName} online={isOnline} />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold text-white">{user.fullName}</p>
+        {isTyping ? (
+          <p className="truncate text-xs font-medium text-violet-300">typing...</p>
+        ) : (
+          <p className="truncate text-xs text-slate-500">{isOnline ? "Online" : `@${user.username}`}</p>
+        )}
       </div>
-      <div className="divider my-0 py-0 h-1"></div>
-    </>
+      {unread > 0 && (
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-violet-500 px-1.5 text-xs font-bold text-white">
+          {unread > 99 ? "99+" : unread}
+        </span>
+      )}
+    </button>
   );
 };
 

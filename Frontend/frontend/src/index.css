@@ -2,31 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-
- /* img for signuppage  is here  */
-
-
- 
-body {
-
-  background :url(/public/BG.avif);
-   background-size: cover   ;
-   background-position:center ;
-   background-repeat : no-repeat ;
-
+:root {
+  color-scheme: dark;
 }
- 
-/* // for scrolllbar chnages and modification */
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background: #0b0b14;
+  color: #e5e7f0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- reusable building blocks ---------- */
+@layer components {
+  .panel {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+
+  .field {
+    @apply w-full h-11 rounded-xl bg-white/5 border border-white/10 pl-10 pr-3 text-sm text-white
+      placeholder:text-slate-500 outline-none transition
+      focus:border-violet-400/70 focus:bg-white/10 focus:ring-2 focus:ring-violet-500/20;
+  }
+
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 h-11 w-full rounded-xl font-semibold text-white
+      bg-gradient-to-r from-violet-500 to-indigo-500 shadow-lg shadow-violet-900/40
+      transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+}
+
+/* slim, themed scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.45) transparent;
+}
 ::-webkit-scrollbar {
-    width: 15px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-    background-color: #cb1212;
-}
-::-webkit-scrollbar-button {
-    background-color: orange;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, pink, blue);
+  background: rgba(139, 92, 246, 0.45);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
 }

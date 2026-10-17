@@ -1,120 +1,77 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react"; // need to istall reactdom and react-router-dom fro these
-import axios from "axios";
+import React, { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { setAuthUser } from "../redux/userSlice"; //
+import { useDispatch, useSelector } from "react-redux";
+import { FiUser, FiLock } from "react-icons/fi";
+import api from "../api";
+import { errorMessage } from "../utils/format";
+import { setAuthUser } from "../redux/userSlice";
+import AuthLayout from "./AuthLayout";
+import FormField from "./FormField";
 
 const Login = () => {
-  const [user, setUser] = useState({
-    username: "",
-    password: "",
-  });
+  const [user, setUser] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+
+  // already logged in -> straight to the chat
+  if (authUser) return <Navigate to="/" replace />;
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
-      console.log(user);
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/Login`,
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        },
-      );
-
-      // i f i get repsonse data s succes , naviagte to home page
-      //as the data is scuuccesfulty  piut in backend . go to home  directly
-      navigate("/"); // naviaget to home page
-      // console.log(res.data);
-      // i will get an object when i login
-      // that object willb be send to
+      const res = await api.post("/api/v1/user/login", user);
       dispatch(setAuthUser(res.data));
-      //  this is redux part
+      navigate("/");
     } catch (error) {
-      toast.error(error.response.data.message);
-      console.log(error);
+      toast.error(errorMessage(error, "Could not reach the server"));
+      setUser((u) => ({ ...u, password: "" }));
+    } finally {
+      setLoading(false);
     }
-
-    // after submitting my fildes s will be emptied
-    setUser({
-      username: "",
-      password: "",
-    });
   };
 
   return (
-    <div className="min-w-96  mx-auto">
-      <div
-        className="
-h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-25 border border-gray-100
-  p-6  "
-      >
-        <h1 className="text-3xl font-bold  text-center text-gray-300">
-          {" "}
-          Login{" "}
-        </h1>
-        <form onSubmit={onSubmitHandler} action="">
-          {/* no need of gull name  */}
-          {/* 3 dic copies */}
-          <div>
-            <label className="label p-2">
-              <span className="text-base label-text"> UserName</span>
-            </label>
-            <input
-              value={user.username}
-              onChange={(e) => setUser({ ...user, username: e.target.value })}
-              className="w-full  input-bordered h-10"
-              type="text"
-              placeholder=" UserName"
-            />
-          </div>
-
-          {/* onemore */}
-
-          <div>
-            <label className="label p-2">
-              <span className="text-base label-text"> Password </span>
-            </label>
-            <input
-              value={user.password}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
-              className="w-full  input-bordered h-10"
-              type="password"
-              placeholder=" Password"
-            />
-          </div>
-          {/* confirmpassword  */}
-
-          {/* no nrrd of comgim password  */}
-
-          {/* no need of checkbox  */}
-
-          <p className="text-center my-2">
-            Don't have an Account? <Link to="/register">Signup</Link>
-            {/* any error here  */}
-          </p>
-
-          <div>
-            <button
-              type="submit"
-              className="btn btn-block btn-md mt-2 border  border-slate-700"
-            >
-              {" "}
-              login
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <AuthLayout
+      title="Welcome back"
+      subtitle="Sign in to continue your conversations"
+      footer={
+        <>
+          Don&apos;t have an account?{" "}
+          <Link to="/register" className="font-semibold text-violet-400 hover:text-violet-300">
+            Sign up
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={onSubmitHandler} className="space-y-4">
+        <FormField
+          label="Username"
+          icon={FiUser}
+          value={user.username}
+          onChange={(e) => setUser({ ...user, username: e.target.value })}
+          placeholder="your username"
+          autoComplete="username"
+          required
+        />
+        <FormField
+          label="Password"
+          icon={FiLock}
+          type="password"
+          value={user.password}
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
+          placeholder="••••••••"
+          autoComplete="current-password"
+          required
+        />
+        <button type="submit" disabled={loading} className="btn-brand mt-2">
+          {loading ? <span className="loading loading-spinner loading-sm" /> : "Sign in"}
+        </button>
+      </form>
+    </AuthLayout>
   );
 };
 

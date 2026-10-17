@@ -1,168 +1,129 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react"; // need to istall reactdom and react-router-dom fro these
-import axios from "axios";
+import React, { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { FiUser, FiLock, FiAtSign } from "react-icons/fi";
+import api from "../api";
+import { errorMessage } from "../utils/format";
+import AuthLayout from "./AuthLayout";
+import FormField from "./FormField";
+
+const emptyForm = {
+  fullName: "",
+  username: "",
+  password: "",
+  confirmaPassword: "", // spelling matches the backend field
+  gender: "male",
+};
 
 const Signup = () => {
-  // taking input from user and storing in state
-  const [user, setUser] = useState({
-    fullName: "",
-    username: "",
-    password: "",
-    confirmaPassword: "",
-    gender: "",
-  });
-
+  const [user, setUser] = useState(emptyForm);
+  const [loading, setLoading] = useState(false);
+  const { authUser } = useSelector((store) => store.user);
   const navigate = useNavigate();
 
-  const handleCheckbox = (gender) => {
-    setUser({ ...user, gender });
-  };
+  if (authUser) return <Navigate to="/" replace />;
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (user.password !== user.confirmaPassword) {
+      return toast.error("Passwords do not match");
+    }
+    setLoading(true);
     try {
-      console.log(user);
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/register`,
-        user,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        },
-      );
-
-      if (res.data.success) { // i f i get repsonse data s succes , naviagte to login page 
-        //as the data is scuuccesfulty  piut in backend . go to login directly
-        navigate("/Login"); // yes name is Login
+      const res = await api.post("/api/v1/user/register", user);
+      if (res.data.success) {
         toast.success(res.data.message);
+        navigate("/login");
       }
     } catch (error) {
-      toast.error(error.response.data.message)
-      
-      console.log(error);
+      toast.error(errorMessage(error, "Could not reach the server"));
+    } finally {
+      setLoading(false);
     }
-
-    setUser({
-      fullName: "",
-      username: "",
-      password: "",
-      confirmaPassword: "",
-      gender: "",
-    });
   };
 
   return (
-    <div className="min-w-96  mx-auto">
-      <div
-        className="
-h-full w-full bg-purple-0 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-25 border border-gray-100
-  p-6  "
-      >
-        <h1 className="text-3xl font-bold  text-center text-gray-300">
-          {" "}
-          Signup Page{" "}
-        </h1>
-        <form onSubmit={onSubmitHandler} action="">
-          <div>
-            <label className="label p-2">
-              <span className="text-base label-text"> Full Name</span>
-            </label>
-            <input
-              value={user.fullName}
-              onChange={(e) => setUser({ ...user, fullName: e.target.value })}
-              className="w-full  input-bordered h-10"
-              type="text"
-              placeholder=" Your Name"
-            />
-          </div>
-          {/* 3 dic copies */}
-          <div>
-            <label className="label p-2">
-              <span className="text-base label-text"> UserName</span>
-            </label>
-            <input
-              value={user.username}
-              onChange={(e) => setUser({ ...user, username: e.target.value })}
-              className="w-full  input-bordered h-10"
-              type="text"
-              placeholder=" UserName"
-            />
-          </div>
+    <AuthLayout
+      title="Create your account"
+      subtitle="Join Affinity and start chatting in seconds"
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link to="/login" className="font-semibold text-violet-400 hover:text-violet-300">
+            Sign in
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={onSubmitHandler} className="space-y-4">
+        <FormField
+          label="Full name"
+          icon={FiUser}
+          value={user.fullName}
+          onChange={(e) => setUser({ ...user, fullName: e.target.value })}
+          placeholder="Your name"
+          required
+        />
+        <FormField
+          label="Username"
+          icon={FiAtSign}
+          value={user.username}
+          onChange={(e) => setUser({ ...user, username: e.target.value })}
+          placeholder="pick a username"
+          autoComplete="username"
+          required
+        />
+        <div className="grid grid-cols-2 gap-3">
+          <FormField
+            label="Password"
+            icon={FiLock}
+            type="password"
+            value={user.password}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            placeholder="••••••"
+            autoComplete="new-password"
+            required
+          />
+          <FormField
+            label="Confirm"
+            icon={FiLock}
+            type="password"
+            value={user.confirmaPassword}
+            onChange={(e) => setUser({ ...user, confirmaPassword: e.target.value })}
+            placeholder="••••••"
+            autoComplete="new-password"
+            required
+          />
+        </div>
 
-          {/* onemore */}
-
-          <div>
-            <label className="label p-2">
-              <span className="text-base label-text"> Password </span>
-            </label>
-            <input
-              value={user.password}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
-              className="w-full  input-bordered h-10"
-              type="password"
-              placeholder=" Password"
-            />
+        <div>
+          <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-400">
+            Gender
+          </span>
+          <div className="grid grid-cols-2 gap-3">
+            {["male", "female"].map((g) => (
+              <button
+                key={g}
+                type="button"
+                onClick={() => setUser({ ...user, gender: g })}
+                className={`h-11 rounded-xl border text-sm font-medium capitalize transition ${
+                  user.gender === g
+                    ? "border-violet-400/70 bg-violet-500/20 text-white"
+                    : "border-white/10 bg-white/5 text-slate-400 hover:bg-white/10"
+                }`}
+              >
+                {g}
+              </button>
+            ))}
           </div>
-          {/* confirmpassword  */}
+        </div>
 
-          <div>
-            <label className="label p-2">
-              <span className="text-base label-text"> Confirm Password </span>
-            </label>
-            <input
-              value={user.confirmaPassword}
-              onChange={(e) =>
-                setUser({ ...user, confirmaPassword: e.target.value })
-              }
-              className="w-full  input-bordered h-10"
-              type="password"
-              placeholder=" Confirm Password"
-            />
-          </div>
-
-          <div className="flex tems-center my-4">
-            <div className="flex items-center">
-              <p>Male</p>
-              <input
-                onChange={() => handleCheckbox("male")}
-                checked={user.gender === "male"}
-                type="checkbox"
-                defaultChecked
-                className="checkbox mx-2"
-              />
-            </div>
-            <div className="flex items-center">
-              <p>Female</p>
-              <input
-                onChange={() => handleCheckbox("female")}
-                checked={user.gender === "female"}
-                type="checkbox"
-                defaultChecked
-                className="checkbox mx-2"
-              />
-            </div>
-          </div>
-
-          <p className="text-center my-2">
-            Already have an Account? <Link to="/Login">Login</Link>
-          </p>
-
-          <div>
-            <button
-              type="submit"
-              className="btn btn-block btn-md mt-2 border  border-slate-700"
-            >
-              {" "}
-              Signup
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <button type="submit" disabled={loading} className="btn-brand mt-2">
+          {loading ? <span className="loading loading-spinner loading-sm" /> : "Create account"}
+        </button>
+      </form>
+    </AuthLayout>
   );
 };
 

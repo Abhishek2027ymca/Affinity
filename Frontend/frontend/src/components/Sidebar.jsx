@@ -1,71 +1,85 @@
 import React, { useState } from "react";
-import { BiSearchAlt2 } from "react-icons/bi";
-import OtherUsers from "./OtherUsers";
+import { FiSearch, FiLogOut, FiMessageCircle, FiX } from "react-icons/fi";
 import toast from "react-hot-toast";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setOtherUsers , setAuthUser} from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
+import api from "../api";
+import { setAuthUser } from "../redux/userSlice";
+import OtherUsers from "./OtherUsers";
+import Avatar from "./Avatar";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  const { OtherUsers: otherUsersData } = useSelector((store) => store.user);
-  // otherUsersData is done by me 
+  const [search, setSearch] = useState("");
+  const { authUser, OnLineUsers } = useSelector((store) => store.user);
+
+  // everyone online except me
+  const onlineCount = (OnLineUsers || []).filter((id) => id !== authUser?._id).length;
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/logout`);
-      console.log(res);
-      navigate("/login");
+      const res = await api.get("/api/v1/user/logout");
       toast.success(res.data.message);
-      dispatch(setAuthUser(null))
     } catch (e) {
       console.log(e);
+    } finally {
+      // always leave, even if the request failed
+      dispatch(setAuthUser(null));
+      navigate("/login");
     }
   };
 
-  const searchSubmitHandler = (e) => {
-    // to stop reload
-    e.preventDefault();
-    const conversationUser = otherUsersData?.find((user) =>
-      user.fullName.toLowerCase().includes(search.toLowerCase()),
-    );
-
-    if (conversationUser) {
-      dispatch(setOtherUsers([conversationUser]));
-    } else {
-      toast.error("User not found");
-    }    
-  };
   return (
-    <div className="border-r border-slate-500 p-4 flex flex-col">
-      <form
-        onSubmit={searchSubmitHandler}
-        action=""
-        className="flex items-center gap-2"
-      >
+    <div className="flex h-full w-full flex-col border-r border-white/10">
+      {/* brand */}
+      <div className="flex items-center gap-3 px-5 pt-5 pb-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500">
+          <FiMessageCircle className="h-5 w-5 text-white" />
+        </div>
+        <div className="flex-1">
+          <h1 className="text-lg font-bold leading-none text-white">Affinity</h1>
+          <p className="mt-1 text-xs text-emerald-400">{onlineCount} online</p>
+        </div>
+      </div>
+
+      {/* live search */}
+      <div className="relative px-4 pb-3">
+        <FiSearch className="pointer-events-none absolute left-7 top-1/2 h-4 w-4 -translate-y-[70%] text-slate-500" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="input input-bordered rounded-md "
+          className="field"
           type="text"
-          placeholder="Search..."
+          placeholder="Search people..."
         />
+        {search && (
+          <button
+            onClick={() => setSearch("")}
+            aria-label="Clear search"
+            className="absolute right-7 top-1/2 -translate-y-[70%] text-slate-500 hover:text-slate-300"
+          >
+            <FiX className="h-4 w-4" />
+          </button>
+        )}
+      </div>
 
-        <button type="submit" className="btn  bg-zinc-500 text-white">
-          <BiSearchAlt2 className="w-6 h-6 outline-none"> </BiSearchAlt2>
-        </button>
-      </form>
-      {/* complete  serach abr */}
+      <OtherUsers search={search} />
 
-      <div className="divider px-3"></div>
-      <OtherUsers />
-      <div className="mt-2">
-        <button className="btn btn-sm bg-slate-50" onClick={logoutHandler}>
-          {" "}
-          Logout{" "}
+      {/* me + logout */}
+      <div className="flex items-center gap-3 border-t border-white/10 px-4 py-3">
+        <Avatar src={authUser?.profilePhoto} name={authUser?.fullName} online size="h-10 w-10" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-white">{authUser?.fullName}</p>
+          <p className="truncate text-xs text-slate-500">@{authUser?.username}</p>
+        </div>
+        <button
+          onClick={logoutHandler}
+          title="Logout"
+          aria-label="Logout"
+          className="rounded-xl p-2.5 text-slate-400 transition hover:bg-red-500/15 hover:text-red-400"
+        >
+          <FiLogOut className="h-5 w-5" />
         </button>
       </div>
     </div>
