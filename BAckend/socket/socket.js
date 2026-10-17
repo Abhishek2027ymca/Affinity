@@ -1,38 +1,48 @@
-
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 import http from "http";
 import express from "express";
-
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors:{
-        origin: process.env.FRONTEND_URL || 'http://localhost:3000',  // ✅ changed
-        methods:['GET', 'POST'],
+    cors: {
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
+        methods: ["GET", "POST"],
+        credentials: true,
     },
 });
-export const getReceiverSocketId = (receiverId) => {
-    return userSocketMap[receiverId];
-}
 
-const userSocketMap = {}; // {userId->socketId}
+const userSocketMap = {}; // { userId -> socketId }
 
+export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
 
-io.on('connection', (socket)=>{
-    const userId = socket.handshake.query.userId
-    if(userId !== undefined){
+io.on("connection", (socket) => {
+    const userId = socket.handshake.query.userId;
+    if (userId !== undefined) {
         userSocketMap[userId] = socket.id;
-    } 
+    }
 
-    io.emit('getOnlineUsers',Object.keys(userSocketMap));
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-    socket.on('disconnect', ()=>{
-        console.log('user DIsconnected' , socket.id)
-        delete userSocketMap[userId];
-        io.emit('getOnlineUsers',Object.keys(userSocketMap));
-    })
+    // typing indicator: relay straight to the other person
+    socket.on("typing", ({ to }) => {
+        const receiverSocketId = getReceiverSocketId(to);
+        if (receiverSocketId) io.to(receiverSocketId).emit("typing", { from: userId });
+    });
 
-})
+    socket.on("stopTyping", ({ to }) => {
+        const receiverSocketId = getReceiverSocketId(to);
+        if (receiverSocketId) io.to(receiverSocketId).emit("stopTyping", { from: userId });
+    });
 
-export {app, io, server};
+    socket.on("disconnect", () => {
+        // on a quick refresh the new socket connects before the old one disconnects,
+        // so only remove the entry if it still belongs to *this* socket
+        if (userSocketMap[userId] === socket.id) {
+            delete userSocketMap[userId];
+        }
+        io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    });
+});
+
+export { app, io, server };

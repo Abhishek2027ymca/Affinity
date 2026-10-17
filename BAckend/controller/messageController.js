@@ -1,7 +1,7 @@
 // how to user send messages 
 import { conversation } from "../model/conversation.js";
 import { Message } from "../model/messagemodel.js"
-import { io, getReceiverSocketId } from "../Socket/socket.js";
+import { io, getReceiverSocketId } from "../socket/socket.js";
 
 // receiverId
 export const sendMessage = async (req, res) => {
@@ -9,7 +9,10 @@ export const sendMessage = async (req, res) => {
         const senderId = req.id; /// loggedin user  stored by  the middleware 
         const receiverId = req.params.id;   // taken id  // ✅ FIXED
 
-        const { message } = req.body;
+        const message = req.body.message?.trim();
+        if (!message) {
+            return res.status(400).json({ message: "message cannot be empty" });
+        }
         // first generate the conversation model , make sure the hwcih two persin are chantting
 
         let gotConversation = await conversation.findOne({
@@ -30,14 +33,10 @@ export const sendMessage = async (req, res) => {
 
         if (newMessage) {
             gotConversation.messages.push(newMessage._id); // here this .messages is not  the message of req.body?
-            // 
         }
 
+        // saves the conversation with the new message id added to its messages array
         await gotConversation.save();
-         //  this saves the conversation with the new message added to the messages array.
-
-
-         await Promise.all([gotConversation.save(), newMessage.save()]) ;                       
         // !!!!          statrt implemting SOCKET IO
 
         const receiverSocketId = getReceiverSocketId(receiverId);

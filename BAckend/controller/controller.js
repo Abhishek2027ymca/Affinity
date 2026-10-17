@@ -1,6 +1,9 @@
 import User from "../model/usermodel.js"  // Remove the curly braces
 import bcrypt from "bcryptjs"; // is this coorect 
 import jwt from "jsonwebtoken"
+
+// same options for setting and clearing the cookie, otherwise the browser will not remove it (cross-site)
+const cookieOptions = { httpOnly: true, sameSite: "none", secure: true };
 export const register = async (req, res) => {
 
     try {
@@ -19,7 +22,7 @@ export const register = async (req, res) => {
         }
 
 
-        const hashedPassword = await bcrypt.hash(password , 5)
+        const hashedPassword = await bcrypt.hash(password , 10)
         
 const maleProfilePhoto = `https://robohash.org/${username}?set=set2&size=200x200`;
 const femaleProfilePhoto = `https://robohash.org/${username}?set=set4&size=200x200`;
@@ -39,7 +42,7 @@ const femaleProfilePhoto = `https://robohash.org/${username}?set=set4&size=200x2
 
 catch (error){
 console.log(error);
-
+return res.status(500).json({ message: "Server error" });
 }
 }
 // what does this controller do 
@@ -81,7 +84,7 @@ export const login = async (req,res)=>{
         }
 
         const token = await jwt.sign(tokenData , process.env. JWT_SECRET_KEY , {expiresIn : '1d'});
-     return res.status(200).cookie("token" , token , {maxAge: 1*24*60*60*1000, httpOnly : true , sameSite :"none" , secure: true   }).json({
+     return res.status(200).cookie("token" , token , { ...cookieOptions, maxAge: 1*24*60*60*1000 }).json({
 
       _id : user._id, // getting refrence from userschema 
         username : user.username,
@@ -92,7 +95,7 @@ export const login = async (req,res)=>{
     }
     catch(error){
         console.log(error );
-        
+        return res.status(500).json({ message: "Server error" });
     }
 }// we will get a token value ere for further sesssion
 
@@ -103,12 +106,13 @@ export const login = async (req,res)=>{
 
 export const logout = (req, res) => {  // Add req here
     try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+        return res.status(200).clearCookie("token", cookieOptions).json({
             message: "logged out successfully"
         })
     }
     catch(error) {
         console.log(error);
+        return res.status(500).json({ message: "Server error" });
     }
 }   // here token will be removed fromt he body 
 
@@ -125,6 +129,6 @@ export const getotherUsers = async (req, res) => {
     }
     catch(error){
    console.log(error);
-   
+   return res.status(500).json({ message: "Server error" });
     }
 }
