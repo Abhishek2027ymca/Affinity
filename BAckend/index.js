@@ -17,7 +17,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 const corsOption = {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    // trailing slashes would never match the browser's Origin header, so strip them
+    origin: (process.env.FRONTEND_URL || "http://localhost:3000").replace(/\/+$/, ""),
     credentials: true,
 };
 app.use(cors(corsOption));
