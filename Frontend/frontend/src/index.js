@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store.js";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
+import WarningIcon from "./components/WarningIcon";
 
 const persistor = persistStore(store);
 
@@ -16,14 +17,21 @@ root.render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <App />
+        {/* Win98-style pop-ups */}
         <Toaster
           position="top-center"
           toastOptions={{
             style: {
-              background: "#1a1a2e",
-              color: "#e5e7f0",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "#c0c0c0",
+              color: "#000",
+              borderRadius: 0,
+              boxShadow:
+                "inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px #808080, inset 2px 2px #fff",
+              font: '11px Tahoma, "MS Sans Serif", Geneva, sans-serif',
+              padding: "8px 10px",
             },
+            success: { icon: null },
+            error: { icon: <WarningIcon size={16} /> },
           }}
         />
       </PersistGate>

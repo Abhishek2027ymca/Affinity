@@ -32,4 +32,8 @@ const userSlice = createSlice({
 
 export const { setAuthUser, setOtherUsers, setSelectedUser, setOnlineUsers } =
   userSlice.actions;
+
+// everyone online except me
+export const selectOnlineCount = (store) =>
+  (store.user.OnLineUsers || []).filter((id) => id !== store.user.authUser?._id).length;
 export default userSlice.reducer;

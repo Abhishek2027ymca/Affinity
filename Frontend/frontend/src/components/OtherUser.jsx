@@ -13,27 +13,21 @@ const OtherUser = ({ user }) => {
   const isSelected = selectedUser?._id === user._id;
 
   return (
-    <button
-      onClick={() => dispatch(setSelectedUser(user))}
-      className={`flex w-full items-center gap-3 rounded-2xl p-3 text-left transition ${
-        isSelected ? "bg-violet-500/20 ring-1 ring-violet-400/30" : "hover:bg-white/5"
-      }`}
-    >
-      <Avatar src={user.profilePhoto} name={user.fullName} online={isOnline} />
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-white">{user.fullName}</p>
-        {isTyping ? (
-          <p className="truncate text-xs font-medium text-violet-300">typing...</p>
-        ) : (
-          <p className="truncate text-xs text-slate-500">{isOnline ? "Online" : `@${user.username}`}</p>
-        )}
-      </div>
-      {unread > 0 && (
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-violet-500 px-1.5 text-xs font-bold text-white">
-          {unread > 99 ? "99+" : unread}
-        </span>
-      )}
-    </button>
+    <div className="pl-[14px]">
+      <button
+        onClick={() => dispatch(setSelectedUser(user))}
+        className={`flex h-[18px] w-full items-center gap-[4px] px-[2px] text-left outline-1 outline-offset-[-1px] focus-visible:outline-dotted ${
+          isSelected
+            ? "bg-win-navy text-white outline-dotted outline-white"
+            : `outline-black ${isOnline ? "" : "text-win-gray"}`
+        }`}
+      >
+        <Avatar src={user.profilePhoto} name={user.fullName} size={16} className={isOnline ? "" : "opacity-50"} />
+        <span className="min-w-0 flex-1 truncate">{user.fullName}</span>
+        {isTyping && <span className={`italic ${isSelected ? "text-[#dfdfdf]" : "text-win-gray"}`}>typing…</span>}
+        {unread > 0 && <span className="font-bold text-[#ff0000]">({unread > 99 ? "99+" : unread})</span>}
+      </button>
+    </div>
   );
 };
 

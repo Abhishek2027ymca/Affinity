@@ -1,17 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-// round profile photo with an optional green "online" dot
-const Avatar = ({ src, name, online = false, size = "h-12 w-12" }) => (
-  <div className={`relative shrink-0 ${size}`}>
-    <img
-      src={src}
-      alt={name || "profile"}
-      className="h-full w-full rounded-full bg-white/10 object-cover ring-2 ring-white/10"
-    />
-    {online && (
-      <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-[#12121f]" />
-    )}
-  </div>
-);
+// square "buddy icon": the profile photo, or a grey tile with initials when there is none
+const Avatar = ({ src, name = "", size = 16, className = "" }) => {
+  const [broken, setBroken] = useState(false);
+  useEffect(() => setBroken(false), [src]);
+
+  if (src && !broken) {
+    return (
+      <img
+        src={src}
+        alt={name || "buddy icon"}
+        onError={() => setBroken(true)}
+        style={{ width: size, height: size }}
+        className={`block shrink-0 object-cover ${className}`}
+      />
+    );
+  }
+
+  const initials = name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0].toUpperCase())
+    .join("");
+
+  return (
+    <span
+      role="img"
+      aria-label={name || "buddy icon"}
+      style={{ width: size, height: size, fontSize: Math.max(7, Math.round(size * 0.4)) }}
+      className={`flex shrink-0 items-center justify-center bg-win-gray font-bold leading-none text-white ${className}`}
+    >
+      {initials}
+    </span>
+  );
+};
 
 export default Avatar;

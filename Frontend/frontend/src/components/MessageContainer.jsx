@@ -1,5 +1,4 @@
 import React from "react";
-import { FiArrowLeft, FiMessageCircle } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedUser } from "../redux/userSlice";
 import SendInput from "./SendInput";
@@ -8,40 +7,39 @@ import Avatar from "./Avatar";
 
 const MessageContainer = () => {
   const dispatch = useDispatch();
-  const { selectedUser, authUser, OnLineUsers } = useSelector((store) => store.user);
-  const isTyping = useSelector((store) => !!store.ui.typing[selectedUser?._id]);
+  const { selectedUser, OnLineUsers } = useSelector((store) => store.user);
   const isOnline = OnLineUsers?.includes(selectedUser?._id);
 
   if (!selectedUser) {
     return (
-      <div className="flex w-full flex-col items-center justify-center px-6 text-center">
-        <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-500/30 to-indigo-500/30 ring-1 ring-white/10">
-          <FiMessageCircle className="h-10 w-10 text-violet-300" />
-        </div>
-        <h2 className="text-3xl font-bold text-white">Hi, {authUser?.fullName}</h2>
-        <p className="mt-2 text-slate-400">Pick someone from the list to start a conversation.</p>
+      <div className="flex w-full items-center justify-center p-4">
+        <p className="win-sunken px-[24px] py-[16px] text-center">Select a buddy to start an IM.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col gap-[4px]">
       {/* header */}
-      <div className="flex items-center gap-3 border-b border-white/10 bg-white/5 px-4 py-3">
+      <div className="flex items-center gap-[6px]">
         <button
+          type="button"
           onClick={() => dispatch(setSelectedUser(null))}
-          aria-label="Back to chats"
-          className="rounded-xl p-2 text-slate-300 hover:bg-white/10 md:hidden"
+          aria-label="Back to buddy list"
+          className="win-btn min-w-0 px-[8px] md:hidden"
         >
-          <FiArrowLeft className="h-5 w-5" />
+          Back
         </button>
-        <Avatar src={selectedUser.profilePhoto} name={selectedUser.fullName} online={isOnline} size="h-11 w-11" />
-        <div className="min-w-0">
-          <p className="truncate font-semibold text-white">{selectedUser.fullName}</p>
-          <p className={`text-xs ${isTyping ? "text-violet-300" : isOnline ? "text-emerald-400" : "text-slate-500"}`}>
-            {isTyping ? "typing..." : isOnline ? "Online" : "Offline"}
+        <Avatar src={selectedUser.profilePhoto} name={selectedUser.fullName} size={40} />
+        <div className="min-w-0 flex-1">
+          <p className="truncate">
+            To: <b>{selectedUser.fullName}</b> ({selectedUser.username})
           </p>
+          <p className={isOnline ? "text-[#008000]" : "text-win-gray"}>{isOnline ? "● Online" : "Offline"}</p>
         </div>
+        <button type="button" className="win-btn">
+          Get Info
+        </button>
       </div>
 
       <Messages />

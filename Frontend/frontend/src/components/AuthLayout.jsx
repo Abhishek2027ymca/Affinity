@@ -1,23 +1,20 @@
 import React from "react";
-import { FiMessageCircle } from "react-icons/fi";
-import Background from "./Background";
+import TitleBar from "./TitleBar";
 
-const AuthLayout = ({ title, subtitle, children, footer }) => (
-  <Background>
-    <div className="flex min-h-screen items-center justify-center px-4 py-8">
-      <div className="panel w-full max-w-md rounded-3xl p-8 shadow-2xl shadow-black/40 animate-fade-up">
-        <div className="mb-6 flex flex-col items-center text-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 shadow-lg shadow-violet-900/50">
-            <FiMessageCircle className="h-7 w-7 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-white">{title}</h1>
-          <p className="mt-1 text-sm text-slate-400">{subtitle}</p>
+// teal desktop with one centered dialog: title bar, navy banner, then the form
+const AuthLayout = ({ title, children }) => (
+  <div className="flex min-h-full items-center justify-center px-4 py-8">
+    <div className="win-raised w-full max-w-[320px] p-[3px]">
+      <TitleBar title={title} controls={false} />
+      <div className="flex flex-col gap-[10px] p-[8px]">
+        <div className="win-sunken bg-win-navy px-[14px] py-[12px]">
+          <p className="font-banner text-[30px] italic leading-none text-white">Affinity</p>
+          <p className="mt-[6px] font-bold tracking-[3px] text-[#ffff00]">INSTANT MESSENGER</p>
         </div>
         {children}
-        <p className="mt-6 text-center text-sm text-slate-400">{footer}</p>
       </div>
     </div>
-  </Background>
+  </div>
 );
 
 export default AuthLayout;

@@ -1,16 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FiSend } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import api from "../api";
 import { addMessage } from "../redux/messageSlice";
 import { errorMessage } from "../utils/format";
+import Avatar from "./Avatar";
+
+// B / I / U formatting buttons (decorative)
+const TOOLS = [
+  { label: "B", title: "Bold", style: "font-bold" },
+  { label: "I", title: "Italic", style: "italic" },
+  { label: "U", title: "Underline", style: "underline" },
+];
 
 const SendInput = () => {
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const dispatch = useDispatch();
-  const { selectedUser } = useSelector((store) => store.user);
+  const { selectedUser, authUser } = useSelector((store) => store.user);
   const { socket } = useSelector((store) => store.socket);
   const typingTimer = useRef(null);
   const selectedId = selectedUser?._id;
@@ -55,25 +62,62 @@ const SendInput = () => {
     }
   };
 
+  // Enter sends, Shift+Enter starts a new line
+  const onKeyDownHandler = (e) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) onSubmitHandler(e);
+  };
+
   return (
-    <form onSubmit={onSubmitHandler} className="border-t border-white/10 bg-white/5 p-3 md:p-4">
-      <div className="flex items-center gap-2">
-        <input
-          value={message}
-          onChange={onChangeHandler}
-          type="text"
-          maxLength={2000}
-          placeholder={`Message ${selectedUser?.fullName || ""}...`}
-          className="field pl-4"
-          autoFocus
-        />
-        <button
-          type="submit"
-          disabled={!message.trim() || sending}
-          aria-label="Send message"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 text-white shadow-lg shadow-violet-900/40 transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <FiSend className="h-5 w-5" />
+    <form onSubmit={onSubmitHandler} className="flex flex-col gap-[6px]">
+      <div className="flex gap-[6px]">
+        <div className="flex min-w-0 flex-1 flex-col gap-[4px]">
+          <div className="flex items-center gap-[2px]">
+            {TOOLS.map((tool) => (
+              <button
+                key={tool.label}
+                type="button"
+                title={tool.title}
+                aria-label={tool.title}
+                className={`win-btn h-[22px] w-[23px] min-w-0 p-0 font-times text-[13px] ${tool.style}`}
+              >
+                {tool.label}
+              </button>
+            ))}
+            <select defaultValue="Arial" aria-label="Font" className="win-select ml-[4px] w-[96px]">
+              <option>Arial</option>
+            </select>
+          </div>
+          <textarea
+            value={message}
+            onChange={onChangeHandler}
+            onKeyDown={onKeyDownHandler}
+            maxLength={2000}
+            aria-label={`Message ${selectedUser?.fullName || ""}`}
+            className="win-field h-[64px] w-full resize-none font-chat text-[13px]"
+            autoFocus
+          />
+        </div>
+
+        {/* my buddy icon */}
+        <div className="hidden shrink-0 flex-col items-center gap-[2px] sm:flex">
+          <div className="win-raised p-[2px]">
+            <Avatar src={authUser?.profilePhoto} name={authUser?.fullName} size={68} />
+          </div>
+          <button type="button" className="win-link">
+            Change…
+          </button>
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-[6px]">
+        <button type="button" className="win-btn">
+          Warn
+        </button>
+        <button type="button" className="win-btn">
+          Block
+        </button>
+        <button type="submit" disabled={!message.trim() || sending} className="win-btn win-btn-default font-bold">
+          Send
         </button>
       </div>
     </form>

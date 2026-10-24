@@ -1,7 +1,7 @@
-// "09:41 PM"
+// "9:41 PM"
 export const formatTime = (date) =>
   date
-    ? new Date(date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    ? new Date(date).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
     : "";
 
 // "Today" | "Yesterday" | "12 Oct 2026"

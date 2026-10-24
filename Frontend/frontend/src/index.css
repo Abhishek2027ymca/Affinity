@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -14,47 +14,251 @@ body,
 
 body {
   margin: 0;
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-  background: #0b0b14;
-  color: #e5e7f0;
-  -webkit-font-smoothing: antialiased;
+  font-family: Tahoma, "MS Sans Serif", Geneva, sans-serif;
+  font-size: 11px;
+  color: #000;
+  background: #008080;
 }
 
-/* ---------- reusable building blocks ---------- */
+/* Win98 has no rounded corners anywhere, third-party widgets (toasts) included */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
+/* ---------- Win98 building blocks ---------- */
 @layer components {
-  .panel {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  /* raised bevel: windows, dialogs, buttons */
+  .win-raised,
+  .win-btn,
+  .win-caption-btn {
+    background: #c0c0c0;
+    box-shadow:
+      inset -1px -1px #0a0a0a,
+      inset 1px 1px #dfdfdf,
+      inset -2px -2px #808080,
+      inset 2px 2px #fff;
   }
 
-  .field {
-    @apply w-full h-11 rounded-xl bg-white/5 border border-white/10 pl-10 pr-3 text-sm text-white
-      placeholder:text-slate-500 outline-none transition
-      focus:border-violet-400/70 focus:bg-white/10 focus:ring-2 focus:ring-violet-500/20;
+  /* sunken bevel: text boxes, list boxes, the chat log */
+  .win-sunken,
+  .win-field,
+  .win-select,
+  .win-check {
+    background: #fff;
+    box-shadow:
+      inset -1px -1px #fff,
+      inset 1px 1px #808080,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px #0a0a0a;
   }
 
-  .btn-brand {
-    @apply inline-flex items-center justify-center gap-2 h-11 w-full rounded-xl font-semibold text-white
-      bg-gradient-to-r from-violet-500 to-indigo-500 shadow-lg shadow-violet-900/40
-      transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed;
+  /* pressed button: the raised bevel turned inside out */
+  .win-pressed,
+  .win-btn:active:not(:disabled),
+  .win-caption-btn:active {
+    box-shadow:
+      inset -1px -1px #fff,
+      inset 1px 1px #0a0a0a,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px #808080;
+  }
+
+  /* shallow 1px well: status bar panels, the tray clock */
+  .win-status {
+    height: 20px;
+    box-shadow:
+      inset -1px -1px #fff,
+      inset 1px 1px #808080;
+  }
+
+  .win-btn {
+    position: relative;
+    min-width: 75px;
+    height: 23px;
+    padding: 0 12px;
+    color: #000;
+  }
+  .win-btn:focus {
+    outline: none;
+  }
+  /* keyboard focus: dotted rectangle inside the button */
+  .win-btn:focus-visible::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px dotted #000;
+    pointer-events: none;
+  }
+  /* the default button, the one Enter presses */
+  .win-btn-default,
+  .win-btn-default:focus {
+    outline: 1px solid #000;
+  }
+  .win-btn:disabled {
+    color: #808080;
+    text-shadow: 1px 1px #fff;
+  }
+
+  .win-caption-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 14px;
+    padding: 0;
+  }
+
+  .win-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    height: 18px;
+    padding: 0 2px 0 4px;
+    background: linear-gradient(90deg, #000080, #1084d0);
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .win-field {
+    height: 21px;
+    padding: 3px 4px;
+    color: #000;
+    outline: none;
+  }
+  .win-field::placeholder {
+    color: #808080;
+  }
+
+  /* combo box: sunken field with a raised drop-down button on the right */
+  .win-select {
+    appearance: none;
+    height: 21px;
+    padding: 0 20px 0 4px;
+    background: #fff
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='17' shape-rendering='crispEdges'%3E%3Crect width='16' height='17' fill='%230a0a0a'/%3E%3Crect width='15' height='16' fill='%23dfdfdf'/%3E%3Crect x='1' y='1' width='14' height='15' fill='%23808080'/%3E%3Crect x='1' y='1' width='13' height='14' fill='%23fff'/%3E%3Crect x='2' y='2' width='12' height='13' fill='%23c0c0c0'/%3E%3Cpath d='M4 6h7v1h-1v1H9v1H8v1H7V9H6V8H5V7H4z'/%3E%3C/svg%3E")
+      no-repeat right 2px top 2px;
+    color: #000;
+  }
+  .win-select:focus {
+    outline: none;
+  }
+  .win-select:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: -4px;
+  }
+
+  /* 13px check box with the pixel tick */
+  .win-check {
+    appearance: none;
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    margin: 0;
+  }
+  .win-check:checked {
+    background: #fff
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M6 0h1v1H6zM5 1h2v1H5zM0 2h1v1H0zM4 2h3v1H4zM0 3h2v1H0zM3 3h3v1H3zM0 4h5v1H0zM1 5h3v1H1zM2 6h1v1H2z'/%3E%3C/svg%3E")
+      no-repeat center;
+  }
+  .win-check:focus {
+    outline: none;
+  }
+  .win-check:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: 1px;
+  }
+
+  /* etched groove between dialog sections */
+  .win-divider {
+    height: 2px;
+    box-shadow:
+      inset 0 1px #808080,
+      inset 0 -1px #fff;
+  }
+
+  .win-link {
+    color: #0000ff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .win-link:focus {
+    outline: none;
+  }
+  .win-link:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: 1px;
+  }
+
+  /* 50% grey/white checkerboard: the "on" look of the active taskbar button */
+  .win-dither {
+    background: #c0c0c0
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2' shape-rendering='crispEdges'%3E%3Crect width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23fff'/%3E%3C/svg%3E");
+  }
+
+  .win-taskbar {
+    background: #c0c0c0;
+    box-shadow:
+      inset 0 1px #dfdfdf,
+      inset 0 2px #fff;
   }
 }
 
-/* slim, themed scrollbars */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.45) transparent;
-}
+/* ---------- Win98 scrollbars: checkered track, raised thumb and arrow buttons ---------- */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 16px;
+  height: 16px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #c0c0c0
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2' shape-rendering='crispEdges'%3E%3Crect width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23fff'/%3E%3C/svg%3E");
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.45);
-  border-radius: 999px;
+::-webkit-scrollbar-corner {
+  background: #c0c0c0;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.7);
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-button {
+  background-color: #c0c0c0;
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #dfdfdf,
+    inset -2px -2px #808080,
+    inset 2px 2px #fff;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+::-webkit-scrollbar-button:active {
+  box-shadow:
+    inset -1px -1px #808080,
+    inset 1px 1px #808080;
+}
+::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v1h1v1h1v1h1v1H0V3h1V2h1V1h1z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:vertical:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h7v1H6v1H5v1H4v1H3V3H2V2H1V1H0z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v7H3V6H2V5H1V4H0V3h1V2h1V1h1z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z'/%3E%3C/svg%3E");
+}
+
+/* Firefox has no ::-webkit-scrollbar; give it the Win98 colours at least */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: #c0c0c0 #dfdfdf;
+  }
 }

@@ -3,15 +3,34 @@ import { useSelector } from "react-redux";
 import OtherUser from "./OtherUser.jsx";
 import useGetOtherUsers from "../hooks/useGetOtherUsers.jsx";
 
+// sunken list box; the inner div scrolls so the bevel stays put
+const ListBox = ({ children }) => (
+  <div className="win-sunken min-h-0 flex-1 p-[2px]">
+    <div className="h-full overflow-y-auto py-[2px]">{children}</div>
+  </div>
+);
+
+const Group = ({ label, users }) => (
+  <>
+    <p className="flex h-[18px] items-center gap-[3px] px-[2px] font-bold">
+      <span aria-hidden="true">▾</span>
+      {label} ({users.length})
+    </p>
+    {users.map((user) => (
+      <OtherUser key={user._id} user={user} />
+    ))}
+  </>
+);
+
 const OtherUsers = ({ search = "" }) => {
   useGetOtherUsers();
   const { OtherUsers, OnLineUsers } = useSelector((store) => store.user);
 
   if (!OtherUsers) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <span className="loading loading-spinner text-primary" />
-      </div>
+      <ListBox>
+        <p className="px-[4px] text-win-gray">Loading buddies…</p>
+      </ListBox>
     );
   }
 
@@ -29,18 +48,19 @@ const OtherUsers = ({ search = "" }) => {
 
   if (users.length === 0) {
     return (
-      <p className="flex-1 px-6 pt-10 text-center text-sm text-slate-500">
-        {query ? `No one matches "${search}"` : "No other users yet. Invite a friend to sign up!"}
-      </p>
+      <ListBox>
+        <p className="px-[4px] text-win-gray">
+          {query ? `No one matches "${search}"` : "No other users yet. Invite a friend to sign up!"}
+        </p>
+      </ListBox>
     );
   }
 
   return (
-    <div className="flex-1 space-y-1 overflow-y-auto px-2 pb-2">
-      {users.map((user) => (
-        <OtherUser key={user._id} user={user} />
-      ))}
-    </div>
+    <ListBox>
+      <Group label="Online" users={users.filter(isOnline)} />
+      <Group label="Offline" users={users.filter((u) => !isOnline(u))} />
+    </ListBox>
   );
 };
 

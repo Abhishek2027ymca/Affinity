@@ -1,33 +1,27 @@
 import React, { useState } from "react";
-import { FiEye, FiEyeOff } from "react-icons/fi";
 
-// labelled input with a left icon; password fields get a show/hide toggle
-const FormField = ({ label, icon: Icon, type = "text", ...props }) => {
+// label (access letter underlined) above a sunken text box;
+// password fields get a Show/Hide button beside the box
+const FormField = ({ label, type = "text", ...props }) => {
   const [show, setShow] = useState(false);
   const isPassword = type === "password";
 
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-400">
-        {label}
+      <span className="mb-[3px] block">
+        <u>{label[0]}</u>
+        {label.slice(1)}
       </span>
-      <div className="relative">
-        {Icon && (
-          <Icon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-        )}
-        <input
-          {...props}
-          type={isPassword && show ? "text" : type}
-          className={`field ${isPassword ? "pr-10" : ""}`}
-        />
+      <div className="flex gap-[4px]">
+        <input {...props} type={isPassword && show ? "text" : type} className="win-field min-w-0 flex-1" />
         {isPassword && (
           <button
             type="button"
             onClick={() => setShow((s) => !s)}
             aria-label={show ? "Hide password" : "Show password"}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+            className="win-btn h-[21px] min-w-[48px] px-[6px]"
           >
-            {show ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
+            {show ? "Hide" : "Show"}
           </button>
         )}
       </div>

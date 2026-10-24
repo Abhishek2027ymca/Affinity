@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { FiUser, FiLock, FiAtSign } from "react-icons/fi";
 import api from "../api";
 import { errorMessage } from "../utils/format";
 import AuthLayout from "./AuthLayout";
 import FormField from "./FormField";
+import AlertDialog from "./AlertDialog";
 
 const emptyForm = {
   fullName: "",
@@ -19,6 +19,7 @@ const emptyForm = {
 const Signup = () => {
   const [user, setUser] = useState(emptyForm);
   const [loading, setLoading] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const { authUser } = useSelector((store) => store.user);
   const navigate = useNavigate();
 
@@ -27,7 +28,7 @@ const Signup = () => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (user.password !== user.confirmaPassword) {
-      return toast.error("Passwords do not match");
+      return setErrorText("Passwords do not match");
     }
     setLoading(true);
     try {
@@ -37,92 +38,71 @@ const Signup = () => {
         navigate("/login");
       }
     } catch (error) {
-      toast.error(errorMessage(error, "Could not reach the server"));
+      setErrorText(errorMessage(error, "Could not reach the server"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthLayout
-      title="Create your account"
-      subtitle="Join Affinity and start chatting in seconds"
-      footer={
-        <>
-          Already have an account?{" "}
-          <Link to="/login" className="font-semibold text-violet-400 hover:text-violet-300">
-            Sign in
-          </Link>
-        </>
-      }
-    >
-      <form onSubmit={onSubmitHandler} className="space-y-4">
+    <AuthLayout title="New Account">
+      <form onSubmit={onSubmitHandler} className={`flex flex-col gap-[8px] ${loading ? "cursor-wait" : ""}`}>
         <FormField
-          label="Full name"
-          icon={FiUser}
+          label="Full Name"
           value={user.fullName}
           onChange={(e) => setUser({ ...user, fullName: e.target.value })}
-          placeholder="Your name"
           required
         />
         <FormField
-          label="Username"
-          icon={FiAtSign}
+          label="Screen Name"
           value={user.username}
           onChange={(e) => setUser({ ...user, username: e.target.value })}
-          placeholder="pick a username"
           autoComplete="username"
           required
         />
-        <div className="grid grid-cols-2 gap-3">
-          <FormField
-            label="Password"
-            icon={FiLock}
-            type="password"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
-            placeholder="••••••"
-            autoComplete="new-password"
-            required
-          />
-          <FormField
-            label="Confirm"
-            icon={FiLock}
-            type="password"
-            value={user.confirmaPassword}
-            onChange={(e) => setUser({ ...user, confirmaPassword: e.target.value })}
-            placeholder="••••••"
-            autoComplete="new-password"
-            required
-          />
-        </div>
-
-        <div>
-          <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-400">
-            Gender
+        <FormField
+          label="Password"
+          type="password"
+          value={user.password}
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
+          autoComplete="new-password"
+          required
+        />
+        <FormField
+          label="Confirm Password"
+          type="password"
+          value={user.confirmaPassword}
+          onChange={(e) => setUser({ ...user, confirmaPassword: e.target.value })}
+          autoComplete="new-password"
+          required
+        />
+        <label className="block">
+          <span className="mb-[3px] block">
+            <u>G</u>ender
           </span>
-          <div className="grid grid-cols-2 gap-3">
-            {["male", "female"].map((g) => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => setUser({ ...user, gender: g })}
-                className={`h-11 rounded-xl border text-sm font-medium capitalize transition ${
-                  user.gender === g
-                    ? "border-violet-400/70 bg-violet-500/20 text-white"
-                    : "border-white/10 bg-white/5 text-slate-400 hover:bg-white/10"
-                }`}
-              >
-                {g}
-              </button>
-            ))}
-          </div>
-        </div>
+          <select
+            value={user.gender}
+            onChange={(e) => setUser({ ...user, gender: e.target.value })}
+            className="win-select w-full"
+          >
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </label>
 
-        <button type="submit" disabled={loading} className="btn-brand mt-2">
-          {loading ? <span className="loading loading-spinner loading-sm" /> : "Create account"}
-        </button>
+        <div className="win-divider my-[2px]" />
+
+        <div className="flex items-center justify-between">
+          <Link to="/login" className="win-link">
+            Back to Sign On
+          </Link>
+          <button type="submit" disabled={loading} className="win-btn win-btn-default">
+            {loading ? "Creating…" : "Create"}
+          </button>
+        </div>
       </form>
+
+      {errorText && <AlertDialog message={errorText} onClose={() => setErrorText("")} />}
     </AuthLayout>
   );
 };

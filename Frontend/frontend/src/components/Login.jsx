@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { FiUser, FiLock } from "react-icons/fi";
 import api from "../api";
 import { errorMessage } from "../utils/format";
 import { setAuthUser } from "../redux/userSlice";
 import AuthLayout from "./AuthLayout";
 import FormField from "./FormField";
+import AlertDialog from "./AlertDialog";
 
 const Login = () => {
   const [user, setUser] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Login = () => {
       dispatch(setAuthUser(res.data));
       navigate("/");
     } catch (error) {
-      toast.error(errorMessage(error, "Could not reach the server"));
+      setErrorText(errorMessage(error, "Could not reach the server"));
       setUser((u) => ({ ...u, password: "" }));
     } finally {
       setLoading(false);
@@ -35,42 +35,49 @@ const Login = () => {
   };
 
   return (
-    <AuthLayout
-      title="Welcome back"
-      subtitle="Sign in to continue your conversations"
-      footer={
-        <>
-          Don&apos;t have an account?{" "}
-          <Link to="/register" className="font-semibold text-violet-400 hover:text-violet-300">
-            Sign up
-          </Link>
-        </>
-      }
-    >
-      <form onSubmit={onSubmitHandler} className="space-y-4">
+    <AuthLayout title="Sign On">
+      <form onSubmit={onSubmitHandler} className={`flex flex-col gap-[8px] ${loading ? "cursor-wait" : ""}`}>
         <FormField
-          label="Username"
-          icon={FiUser}
+          label="Screen Name"
           value={user.username}
           onChange={(e) => setUser({ ...user, username: e.target.value })}
-          placeholder="your username"
           autoComplete="username"
           required
         />
         <FormField
           label="Password"
-          icon={FiLock}
           type="password"
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
-          placeholder="••••••••"
           autoComplete="current-password"
           required
         />
-        <button type="submit" disabled={loading} className="btn-brand mt-2">
-          {loading ? <span className="loading loading-spinner loading-sm" /> : "Sign in"}
-        </button>
+
+        {/* decorative, like the rest of the AIM chrome */}
+        <div className="flex gap-[16px]">
+          <label className="flex items-center gap-[5px]">
+            <input type="checkbox" className="win-check" defaultChecked />
+            Save password
+          </label>
+          <label className="flex items-center gap-[5px]">
+            <input type="checkbox" className="win-check" />
+            Auto-login
+          </label>
+        </div>
+
+        <div className="win-divider my-[2px]" />
+
+        <div className="flex items-center justify-between">
+          <Link to="/register" className="win-link">
+            Get a Screen Name
+          </Link>
+          <button type="submit" disabled={loading} className="win-btn win-btn-default">
+            {loading ? "Signing On…" : "Sign On"}
+          </button>
+        </div>
       </form>
+
+      {errorText && <AlertDialog message={errorText} onClose={() => setErrorText("")} />}
     </AuthLayout>
   );
 };
